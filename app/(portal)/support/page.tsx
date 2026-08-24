@@ -5,12 +5,8 @@ import {
   Bot,
   Send,
   Sparkles,
-  HelpCircle,
   LifeBuoy,
-  ShieldAlert,
-  Laptop,
   CheckCircle2,
-  AlertCircle,
   FileText,
 } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
@@ -50,7 +46,6 @@ export default function SupportAndAIPage() {
     setMessages((prev) => [...prev, newMsg]);
     setIsThinking(true);
 
-    // AI Sandboxed Response Generator (Safe, zero-privilege explanation assistant)
     setTimeout(() => {
       let replyContent = `I can help explain your LockPulse security setup. Your registered devices (${initialDevices.map(d => d.device_name).join(', ')}) are currently protected via Ed25519 cryptographic channels.`;
 
@@ -94,13 +89,13 @@ export default function SupportAndAIPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pulse-blue/10 text-pulse-blue font-heading text-xs font-bold mb-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-palette-sand-light dark:bg-[#222020] border border-palette-sand text-palette-charcoal dark:text-palette-sand font-mono text-xs font-bold mb-1">
             <Sparkles className="w-3.5 h-3.5" /> Sandboxed AI Security Companion
           </div>
-          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white">
-            AI Assistant & Support
+          <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white tracking-wide">
+            AI ASSISTANT & SUPPORT
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+          <p className="text-xs sm:text-sm font-sans text-palette-ash mt-0.5">
             Ask security questions, troubleshoot laptop connection issues, or open a support ticket.
           </p>
         </div>
@@ -109,7 +104,7 @@ export default function SupportAndAIPage() {
           variant="secondary"
           size="sm"
           onClick={() => setShowTicketModal(true)}
-          leftIcon={<LifeBuoy className="w-4 h-4 text-pulse-blue" />}
+          leftIcon={<LifeBuoy className="w-4 h-4 text-palette-black dark:text-white" />}
         >
           Open Support Ticket
         </NeoButton>
@@ -129,18 +124,18 @@ export default function SupportAndAIPage() {
                 <div
                   className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold ${
                     isUser
-                      ? 'bg-pulse-blue text-white shadow-glow-accent'
-                      : 'bg-[#E0E8F2] dark:bg-[#0E1628] text-pulse-blue shadow-neo-sm'
+                      ? 'bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm'
+                      : 'bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-charcoal dark:text-palette-sand border border-palette-sand'
                   }`}
                 >
                   {isUser ? 'You' : <Bot className="w-4 h-4" />}
                 </div>
 
                 <div
-                  className={`p-4 rounded-2xl max-w-[80%] text-xs leading-relaxed ${
+                  className={`p-4 rounded-2xl max-w-[80%] text-xs font-sans leading-relaxed ${
                     isUser
-                      ? 'bg-gradient-to-r from-pulse-blue to-pulse-cyan text-white shadow-neo-sm font-medium'
-                      : 'bg-[#E5ECF4]/80 dark:bg-[#0D1524] text-slate-800 dark:text-slate-200 shadow-neo-pressed border border-slate-300/40 dark:border-white/5'
+                      ? 'bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm font-medium'
+                      : 'bg-palette-sand-light/60 dark:bg-[#1A1919] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A]'
                   }`}
                 >
                   {msg.content}
@@ -151,10 +146,10 @@ export default function SupportAndAIPage() {
 
           {isThinking && (
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#E0E8F2] dark:bg-[#0E1628] text-pulse-blue shadow-neo-sm flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-ash border border-palette-sand flex items-center justify-center">
                 <Bot className="w-4 h-4 animate-spin" />
               </div>
-              <div className="p-3 bg-[#E5ECF4]/80 dark:bg-[#0D1524] rounded-2xl text-xs text-slate-500 shadow-neo-pressed">
+              <div className="p-3 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-2xl text-xs font-sans text-palette-ash">
                 Analyzing security telemetry...
               </div>
             </div>
@@ -162,7 +157,7 @@ export default function SupportAndAIPage() {
         </div>
 
         {/* Chat Input Form */}
-        <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-3 border-t border-slate-300/40 dark:border-white/10">
+        <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-3 border-t border-palette-sand/60 dark:border-[#3E3B3A]">
           <div className="flex-1">
             <NeoInput
               placeholder="Ask about suspicious unlocks, remote lock, or pairing..."
@@ -192,13 +187,13 @@ export default function SupportAndAIPage() {
       >
         {ticketSubmitted ? (
           <div className="text-center py-6 space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h4 className="font-heading font-bold text-base text-slate-900 dark:text-white">
-              Ticket Submitted Successfully
+            <h4 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+              TICKET SUBMITTED SUCCESSFULLY
             </h4>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs font-sans text-palette-ash">
               Reference #LP-TKT-8924. Our security support team will contact you via your registered email.
             </p>
           </div>
@@ -215,13 +210,13 @@ export default function SupportAndAIPage() {
             </div>
 
             <div>
-              <label className="font-heading font-medium text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
+              <label className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand block mb-1.5">
                 Category
               </label>
               <select
                 value={ticketCategory}
                 onChange={(e: any) => setTicketCategory(e.target.value)}
-                className="w-full bg-[#E5ECF4] dark:bg-[#0E1628] text-slate-800 dark:text-slate-100 rounded-xl px-4 py-3 text-sm shadow-neo-pressed border border-slate-300/40 dark:border-white/5 outline-none"
+                className="w-full bg-palette-white dark:bg-[#1A1919] text-palette-black dark:text-palette-white rounded-xl px-4 py-3 text-sm border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-inset outline-none"
               >
                 <option value="general">General Question</option>
                 <option value="pairing">Device Pairing & QR</option>
@@ -231,7 +226,7 @@ export default function SupportAndAIPage() {
             </div>
 
             <div>
-              <label className="font-heading font-medium text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
+              <label className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand block mb-1.5">
                 Problem Description
               </label>
               <textarea
@@ -240,12 +235,12 @@ export default function SupportAndAIPage() {
                 placeholder="Please describe what happened..."
                 value={ticketDescription}
                 onChange={(e) => setTicketDescription(e.target.value)}
-                className="w-full bg-[#E5ECF4] dark:bg-[#0E1628] text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs shadow-neo-pressed border border-slate-300/40 dark:border-white/5 outline-none resize-none"
+                className="w-full bg-palette-white dark:bg-[#1A1919] text-palette-black dark:text-palette-white rounded-xl p-3 text-xs font-sans border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-inset outline-none resize-none"
               />
             </div>
 
-            <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-xl text-[11px] text-slate-500 flex items-start gap-2">
-              <FileText className="w-4 h-4 text-pulse-blue flex-shrink-0 mt-0.5" />
+            <div className="p-3 bg-palette-sand-light/60 dark:bg-[#141313] rounded-xl text-[11px] font-sans text-palette-ash flex items-start gap-2 border border-palette-sand/60">
+              <FileText className="w-4 h-4 text-palette-black dark:text-white flex-shrink-0 mt-0.5" />
               <span>
                 <strong>Zero Privacy Leakage:</strong> No passwords, session tokens, or private keys are ever included in support tickets.
               </span>

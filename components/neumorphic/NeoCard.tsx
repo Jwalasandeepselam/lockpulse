@@ -21,22 +21,22 @@ export const NeoCard: React.FC<NeoCardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    raised: 'bg-surface-card dark:bg-surface-darkcard shadow-neo-raised dark:shadow-neo-dark-raised border border-white/60 dark:border-white/5',
-    flat: 'bg-surface-card dark:bg-surface-darkcard shadow-neo-flat dark:shadow-neo-dark-flat border border-white/50 dark:border-white/5',
-    inset: 'bg-[#E5ECF4] dark:bg-[#0D1524] shadow-neo-pressed dark:shadow-neo-dark-pressed border border-slate-300/40 dark:border-white/5',
-    floating: 'bg-surface-card dark:bg-surface-darkcard shadow-neo-floating dark:shadow-neo-dark-raised border border-white/70 dark:border-white/10',
+    raised: 'bg-palette-white dark:bg-[#222020] border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-md',
+    flat: 'bg-palette-white dark:bg-[#222020] border border-palette-sand/70 dark:border-[#3E3B3A] shadow-editorial-sm',
+    inset: 'bg-palette-sand-light/60 dark:bg-[#141313] border border-palette-sand dark:border-[#2F2D2D] shadow-editorial-inset',
+    floating: 'bg-palette-white dark:bg-[#222020] border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-lg',
   };
 
   const glowStyles = {
     none: '',
-    secure: 'shadow-glow-secure ring-2 ring-security-secure/40',
-    warning: 'shadow-glow-warning ring-2 ring-security-warning/40',
-    danger: 'shadow-glow-danger ring-2 ring-security-danger/50 animate-pulse-glow',
-    accent: 'shadow-glow-accent ring-2 ring-pulse-cyan/40',
+    secure: 'ring-2 ring-emerald-500/40 shadow-glow-secure',
+    warning: 'ring-2 ring-amber-500/40 shadow-glow-warning',
+    danger: 'ring-2 ring-red-500/50 shadow-glow-danger animate-pulse',
+    accent: 'ring-2 ring-palette-charcoal/30 shadow-glow-accent',
   };
 
   const hoverStyles = hoverEffect
-    ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-neo-floating dark:hover:shadow-neo-dark-raised cursor-pointer'
+    ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-editorial-hover cursor-pointer'
     : '';
 
   return (

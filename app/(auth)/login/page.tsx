@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowRight, ShieldCheck, Github } from 'lucide-react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoInput } from '@/components/neumorphic/NeoInput';
@@ -20,26 +20,25 @@ export default function LoginPage() {
     setIsLoading(true);
     setErrorMessage('');
 
-    // Simulate Supabase authentication
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
     setIsLoading(false);
     router.push('/dashboard');
   };
 
   return (
-    <div className="min-h-screen bg-canvas-light dark:bg-canvas-dark flex items-center justify-center p-4">
+    <div className="min-h-screen bg-palette-canvas dark:bg-[#141313] flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6 animate-fadeIn">
         {/* Brand Header */}
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pulse-blue to-pulse-cyan shadow-glow-accent flex items-center justify-center text-white font-heading font-extrabold text-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm flex items-center justify-center font-heading font-extrabold text-2xl">
               ⚡
             </div>
           </Link>
-          <h1 className="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">
-            Sign In to LockPulse
+          <h1 className="font-heading font-extrabold text-3xl text-palette-black dark:text-white tracking-wide">
+            SIGN IN TO LOCKPULSE
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-xs font-sans text-palette-ash mt-1">
             Access your personal laptop security control plane
           </p>
         </div>
@@ -54,17 +53,17 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              leftIcon={<Mail className="w-4 h-4 text-slate-400" />}
+              leftIcon={<Mail className="w-4 h-4 text-palette-ash" />}
             />
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-heading font-medium text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <span className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand">
                   Password
                 </span>
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-pulse-blue dark:text-pulse-sky font-semibold hover:underline"
+                  className="text-xs font-sans text-palette-ash hover:text-palette-black dark:hover:text-white font-semibold hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -75,7 +74,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                leftIcon={<Lock className="w-4 h-4 text-slate-400" />}
+                leftIcon={<Lock className="w-4 h-4 text-palette-ash" />}
               />
             </div>
 
@@ -101,11 +100,11 @@ export default function LoginPage() {
 
           {/* Social Auth Divider */}
           <div className="relative flex py-2 items-center">
-            <div className="flex-grow border-t border-slate-300/60 dark:border-white/10"></div>
-            <span className="flex-shrink mx-4 text-[11px] font-heading font-bold uppercase tracking-widest text-slate-400">
+            <div className="flex-grow border-t border-palette-sand dark:border-[#3E3B3A]"></div>
+            <span className="flex-shrink mx-4 text-[10px] font-mono font-bold uppercase tracking-widest text-palette-ash">
               Or continue with
             </span>
-            <div className="flex-grow border-t border-slate-300/60 dark:border-white/10"></div>
+            <div className="flex-grow border-t border-palette-sand dark:border-[#3E3B3A]"></div>
           </div>
 
           <NeoButton
@@ -137,9 +136,9 @@ export default function LoginPage() {
         </NeoCard>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs font-sans text-palette-ash">
           Don't have an account?{' '}
-          <Link href="/signup" className="text-pulse-blue font-bold hover:underline">
+          <Link href="/signup" className="text-palette-black dark:text-white font-bold hover:underline">
             Sign Up
           </Link>
         </p>

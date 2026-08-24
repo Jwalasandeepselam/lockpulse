@@ -9,8 +9,6 @@ import {
   Activity,
   Lock,
   Bot,
-  HelpCircle,
-  LogOut,
   User,
   Zap,
 } from 'lucide-react';
@@ -31,25 +29,25 @@ export const NeoNavigation: React.FC = () => {
   return (
     <>
       {/* Desktop Topbar */}
-      <header className="sticky top-0 z-40 w-full neo-glass border-b border-white/60 dark:border-white/5 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 w-full bg-palette-white/90 dark:bg-[#181717]/90 backdrop-blur-md border-b border-palette-sand dark:border-[#3A3837] transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pulse-blue to-pulse-cyan shadow-glow-accent flex items-center justify-center text-white font-heading font-extrabold text-xl tracking-tighter transition-transform group-hover:scale-105">
+          <Link href="/dashboard" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-palette-black dark:bg-palette-white text-white dark:text-palette-black flex items-center justify-center font-heading font-extrabold text-xl tracking-tighter transition-transform group-hover:scale-105 shadow-editorial-sm">
               ⚡
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-pulse-blue transition-colors">
-                LOCK<span className="text-pulse-blue">PULSE</span>
+              <span className="font-heading font-extrabold text-2xl tracking-wider text-palette-black dark:text-white group-hover:text-palette-ash transition-colors">
+                LOCKPULSE
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400">
+              <span className="text-[9px] uppercase font-mono font-bold tracking-widest text-palette-ash">
                 Security Control
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center gap-1 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 p-1.5 rounded-2xl shadow-neo-pressed dark:shadow-neo-dark-pressed border border-slate-300/40 dark:border-white/5">
+          <nav className="hidden md:flex items-center gap-1.5 bg-palette-canvas dark:bg-[#222020] p-1.5 rounded-2xl border border-palette-sand dark:border-[#3E3B3A]">
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
               const Icon = item.icon;
@@ -58,13 +56,13 @@ export const NeoNavigation: React.FC = () => {
                   key={item.name}
                   href={item.href}
                   className={clsx(
-                    'flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-heading font-semibold transition-all duration-200',
+                    'flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold transition-all duration-200',
                     isActive
-                      ? 'bg-surface-card dark:bg-surface-darkcard text-pulse-blue dark:text-pulse-sky shadow-neo-flat dark:shadow-neo-dark-flat border border-white/70 dark:border-white/10'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-palette-white dark:bg-[#323030] text-palette-black dark:text-white shadow-editorial-sm border border-palette-sand dark:border-[#4A4747]'
+                      : 'text-palette-ash hover:text-palette-black dark:hover:text-white'
                   )}
                 >
-                  <Icon className={clsx('w-4 h-4', isActive ? 'text-pulse-blue' : 'text-slate-500')} />
+                  <Icon className={clsx('w-4 h-4', isActive ? 'text-palette-black dark:text-white' : 'text-palette-ash')} />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -74,8 +72,8 @@ export const NeoNavigation: React.FC = () => {
           {/* Right Header Actions */}
           <div className="flex items-center gap-3">
             <Link href="/devices/connect">
-              <button className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-surface-card dark:bg-surface-darkcard text-xs font-heading font-bold text-slate-700 dark:text-slate-200 shadow-neo-flat dark:shadow-neo-dark-flat hover:shadow-neo-raised border border-white/70 dark:border-white/10 transition-all">
-                <Zap className="w-3.5 h-3.5 text-pulse-blue" />
+              <button className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-palette-white dark:bg-[#222020] text-xs font-heading tracking-wide uppercase text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] hover:border-palette-ash shadow-editorial-sm transition-all">
+                <Zap className="w-3.5 h-3.5 text-palette-black dark:text-white" />
                 <span>Pair Laptop</span>
               </button>
             </Link>
@@ -90,7 +88,7 @@ export const NeoNavigation: React.FC = () => {
       </header>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 neo-glass border-t border-white/60 dark:border-white/5 py-2 px-4 flex items-center justify-around shadow-neo-floating">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-palette-white/95 dark:bg-[#181717]/95 backdrop-blur-lg border-t border-palette-sand dark:border-[#3A3837] py-2.5 px-4 flex items-center justify-around shadow-editorial-lg">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
           const Icon = item.icon;
@@ -99,23 +97,23 @@ export const NeoNavigation: React.FC = () => {
               key={item.name}
               href={item.href}
               className={clsx(
-                'flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-200',
+                'flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all duration-200',
                 isActive
-                  ? 'text-pulse-blue dark:text-pulse-sky font-bold'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
+                  ? 'text-palette-black dark:text-white font-bold'
+                  : 'text-palette-ash hover:text-palette-charcoal'
               )}
             >
               <div
                 className={clsx(
                   'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
                   isActive
-                    ? 'bg-surface-card dark:bg-surface-darkcard shadow-neo-flat dark:shadow-neo-dark-flat border border-white/70'
+                    ? 'bg-palette-sand-light dark:bg-[#323030] text-palette-black dark:text-white'
                     : 'bg-transparent'
                 )}
               >
                 <Icon className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-heading">{item.name}</span>
+              <span className="text-[10px] font-sans">{item.name}</span>
             </Link>
           );
         })}

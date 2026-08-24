@@ -17,13 +17,13 @@ export const NeoInput = forwardRef<HTMLInputElement, NeoInputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label className="font-heading font-medium text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+          <label className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-4 text-slate-500 dark:text-slate-400 pointer-events-none flex items-center justify-center">
+            <div className="absolute left-3.5 text-palette-ash pointer-events-none flex items-center justify-center">
               {leftIcon}
             </div>
           )}
@@ -31,23 +31,23 @@ export const NeoInput = forwardRef<HTMLInputElement, NeoInputProps>(
             ref={ref}
             className={twMerge(
               clsx(
-                'w-full bg-[#E5ECF4] dark:bg-[#0E1628] text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 text-sm transition-all duration-200 outline-none shadow-neo-pressed dark:shadow-neo-dark-pressed border border-slate-300/40 dark:border-white/5 focus:ring-2 focus:ring-pulse-cyan focus:border-transparent',
-                leftIcon && 'pl-11',
-                rightIcon && 'pr-11',
-                error && 'ring-2 ring-security-danger border-transparent',
+                'w-full bg-palette-white dark:bg-[#1A1919] text-palette-black dark:text-palette-white placeholder:text-palette-ash/60 rounded-xl px-4 py-3 text-sm font-sans transition-all duration-200 outline-none border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-inset focus:border-palette-black dark:focus:border-palette-white focus:ring-1 focus:ring-palette-black',
+                leftIcon && 'pl-10',
+                rightIcon && 'pr-10',
+                error && 'border-security-danger focus:ring-security-danger',
                 className
               )
             )}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-4 text-slate-500 dark:text-slate-400 flex items-center justify-center">
+            <div className="absolute right-3.5 text-palette-ash flex items-center justify-center">
               {rightIcon}
             </div>
           )}
         </div>
         {error && <span className="text-xs font-semibold text-security-danger">{error}</span>}
-        {!error && helperText && <span className="text-xs text-slate-500 dark:text-slate-400">{helperText}</span>}
+        {!error && helperText && <span className="text-xs text-palette-ash">{helperText}</span>}
       </div>
     );
   }

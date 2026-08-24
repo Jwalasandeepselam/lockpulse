@@ -13,7 +13,6 @@ import {
   ChevronRight,
   Sparkles,
   AlertTriangle,
-  RefreshCw,
 } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
@@ -116,11 +115,11 @@ export default function DashboardPage() {
       {/* Top Welcome Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-heading font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-palette-ash">
             {greeting}, {profile.full_name || 'User'}
           </span>
-          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white mt-0.5">
-            Your Security Overview
+          <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white mt-1 tracking-wide">
+            SECURITY OVERVIEW
           </h1>
         </div>
 
@@ -142,10 +141,10 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
             <div
-              className={`w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center flex-shrink-0 transition-all ${
+              className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all ${
                 isOverallSecure
-                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-glow-secure'
-                  : 'bg-rose-500/15 text-rose-600 dark:text-rose-400 shadow-glow-danger animate-pulse'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 shadow-editorial-sm'
+                  : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30 animate-pulse'
               }`}
             >
               {isOverallSecure ? (
@@ -156,8 +155,8 @@ export default function DashboardPage() {
             </div>
 
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-heading font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-palette-ash">
                   System Status
                 </span>
                 <NeoSecurityBadge
@@ -167,13 +166,13 @@ export default function DashboardPage() {
                 />
               </div>
 
-              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white">
+              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-palette-black dark:text-white tracking-wide">
                 {isOverallSecure
                   ? `${devices.length} Devices Protected`
                   : 'Suspicious Unlock Detected'}
               </h2>
 
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-lg">
+              <p className="text-xs sm:text-sm font-sans text-palette-charcoal dark:text-palette-sand mt-1 max-w-lg">
                 {isOverallSecure
                   ? 'Cryptographic lock channels active. No unauthorized access detected.'
                   : 'A laptop was unlocked while your phone was away. Review the alert below.'}
@@ -198,20 +197,20 @@ export default function DashboardPage() {
         </div>
       </NeoCard>
 
-      {/* Main Grid: Devices (Left/Top) & Recent Activity (Right/Bottom) */}
+      {/* Main Grid: Devices & Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Devices Column (2 Cols on Large Screens) */}
+        {/* Devices Column */}
         <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Laptop className="w-5 h-5 text-pulse-blue" />
-              <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
-                Your Devices
+              <Laptop className="w-5 h-5 text-palette-black dark:text-white" />
+              <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+                YOUR DEVICES
               </h3>
             </div>
             <Link
               href="/devices"
-              className="text-xs font-heading font-bold text-pulse-blue dark:text-pulse-sky hover:underline flex items-center gap-1"
+              className="text-xs font-heading tracking-wider uppercase text-palette-ash hover:text-palette-black dark:hover:text-white flex items-center gap-1"
             >
               Manage All ({devices.length}) <ChevronRight className="w-3.5 h-3.5" />
             </Link>
@@ -230,19 +229,19 @@ export default function DashboardPage() {
 
           {/* AI Security Quick Insight Card */}
           <NeoCard variant="inset" className="p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-pulse-blue/15 text-pulse-blue flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-palette-white dark:bg-[#222020] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] flex items-center justify-center flex-shrink-0">
               <Sparkles className="w-5 h-5" />
             </div>
             <div className="space-y-1 text-xs">
-              <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white">
-                LockPulse Risk Engine
+              <h4 className="font-heading text-base text-palette-black dark:text-white tracking-wide">
+                LOCKPULSE RISK ENGINE
               </h4>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-palette-charcoal dark:text-palette-sand font-sans leading-relaxed">
                 Proximity heuristics indicate <strong>MacBook Pro</strong> is currently at Home Office with owner away. Auto-lock timeout is active at 5 minutes.
               </p>
               <Link
                 href="/support"
-                className="inline-block text-pulse-blue dark:text-pulse-sky font-semibold hover:underline mt-1"
+                className="inline-block text-palette-black dark:text-white font-bold hover:underline mt-1"
               >
                 Ask AI Security Assistant →
               </Link>
@@ -254,14 +253,14 @@ export default function DashboardPage() {
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-pulse-blue" />
-              <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
-                Recent Activity
+              <Activity className="w-5 h-5 text-palette-black dark:text-white" />
+              <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+                RECENT ACTIVITY
               </h3>
             </div>
             <Link
               href="/activity"
-              className="text-xs font-heading font-bold text-pulse-blue dark:text-pulse-sky hover:underline flex items-center gap-1"
+              className="text-xs font-heading tracking-wider uppercase text-palette-ash hover:text-palette-black dark:hover:text-white flex items-center gap-1"
             >
               Full Feed <ChevronRight className="w-3.5 h-3.5" />
             </Link>

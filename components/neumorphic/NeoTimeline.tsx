@@ -34,24 +34,24 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
         return <Unlock className="w-4 h-4 text-amber-500" />;
       case 'lock':
       case 'remote_lock_ack':
-        return <Lock className="w-4 h-4 text-emerald-500" />;
+        return <Lock className="w-4 h-4 text-emerald-600" />;
       case 'wake':
-        return <Sun className="w-4 h-4 text-sky-500" />;
+        return <Sun className="w-4 h-4 text-palette-charcoal" />;
       case 'sleep':
-        return <Moon className="w-4 h-4 text-indigo-400" />;
+        return <Moon className="w-4 h-4 text-palette-ash" />;
       case 'device_paired':
-        return <Smartphone className="w-4 h-4 text-pulse-blue" />;
+        return <Smartphone className="w-4 h-4 text-palette-black dark:text-white" />;
       default:
         return severity === 'high' ? (
           <AlertTriangle className="w-4 h-4 text-security-danger" />
         ) : (
-          <ShieldCheck className="w-4 h-4 text-slate-500" />
+          <ShieldCheck className="w-4 h-4 text-palette-ash" />
         );
     }
   };
 
   return (
-    <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-300 dark:before:bg-slate-700">
+    <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-palette-sand dark:before:bg-[#3E3B3A]">
       {events.map((evt) => {
         const isSuspicious = evt.event_type === 'suspicious_unlock' && !evt.is_resolved;
         const timeStr = new Date(evt.created_at).toLocaleTimeString([], {
@@ -62,25 +62,25 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
         return (
           <div key={evt.id} className="relative group">
             {/* Timeline Node Icon Indicator */}
-            <div className="absolute -left-6 top-1 w-6 h-6 rounded-full bg-surface-card dark:bg-surface-darkcard shadow-neo-sm flex items-center justify-center border border-white/70 dark:border-white/10 z-10">
+            <div className="absolute -left-6 top-1 w-6 h-6 rounded-full bg-palette-white dark:bg-[#222020] border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-sm flex items-center justify-center z-10">
               {getEventIcon(evt.event_type, evt.severity)}
             </div>
 
             <NeoCard
               variant="flat"
               glow={isSuspicious ? 'danger' : 'none'}
-              className="p-4 transition-all duration-200 hover:shadow-neo-raised"
+              className="p-4 transition-all duration-200 hover:border-palette-ash"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400">
+                  <span className="font-mono text-xs font-bold text-palette-ash">
                     {timeStr}
                   </span>
-                  <h5 className="font-heading font-bold text-sm text-slate-900 dark:text-white">
+                  <h5 className="font-heading text-base tracking-wide text-palette-black dark:text-white">
                     {evt.title}
                   </h5>
                   {evt.device_name && (
-                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-md bg-palette-sand-light dark:bg-[#1A1919] text-palette-charcoal dark:text-palette-sand font-bold border border-palette-sand/60">
                       {evt.device_name}
                     </span>
                   )}
@@ -91,11 +91,11 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
                 </div>
               </div>
 
-              <p className="text-xs text-slate-600 dark:text-slate-300 mb-2">{evt.description}</p>
+              <p className="text-xs font-sans text-palette-charcoal dark:text-palette-sand mb-2 leading-relaxed">{evt.description}</p>
 
               {/* Suspicious Action Trigger */}
               {isSuspicious && onPromptWasThisYou && (
-                <div className="mt-3 pt-2 border-t border-rose-200 dark:border-rose-900/40 flex items-center justify-between gap-3">
+                <div className="mt-3 pt-2.5 border-t border-rose-200 dark:border-rose-900/40 flex items-center justify-between gap-3">
                   <span className="text-[11px] font-bold text-security-danger flex items-center gap-1">
                     <AlertTriangle className="w-3.5 h-3.5" /> Action Required: Was this you?
                   </span>
@@ -111,7 +111,7 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
               )}
 
               {evt.is_resolved && evt.resolution_action && (
-                <div className="mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <div className="mt-2 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   Resolved: {evt.resolution_action === 'confirmed_legitimate' ? 'Confirmed by owner' : 'Remote locked'}
                 </div>

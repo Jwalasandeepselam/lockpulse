@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoInput } from '@/components/neumorphic/NeoInput';
@@ -19,26 +19,25 @@ export default function SignupPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate signup & Resend verification email dispatch
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
     setIsLoading(false);
     router.push('/devices/connect');
   };
 
   return (
-    <div className="min-h-screen bg-canvas-light dark:bg-canvas-dark flex items-center justify-center p-4">
+    <div className="min-h-screen bg-palette-canvas dark:bg-[#141313] flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6 animate-fadeIn">
         {/* Brand Header */}
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pulse-blue to-pulse-cyan shadow-glow-accent flex items-center justify-center text-white font-heading font-extrabold text-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm flex items-center justify-center font-heading font-extrabold text-2xl">
               ⚡
             </div>
           </Link>
-          <h1 className="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">
-            Create LockPulse Account
+          <h1 className="font-heading font-extrabold text-3xl text-palette-black dark:text-white tracking-wide">
+            CREATE LOCKPULSE ACCOUNT
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-xs font-sans text-palette-ash mt-1">
             Build your personal laptop security network
           </p>
         </div>
@@ -51,7 +50,7 @@ export default function SignupPage() {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              leftIcon={<User className="w-4 h-4 text-slate-400" />}
+              leftIcon={<User className="w-4 h-4 text-palette-ash" />}
             />
 
             <NeoInput
@@ -61,7 +60,7 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              leftIcon={<Mail className="w-4 h-4 text-slate-400" />}
+              leftIcon={<Mail className="w-4 h-4 text-palette-ash" />}
             />
 
             <NeoInput
@@ -71,7 +70,7 @@ export default function SignupPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              leftIcon={<Lock className="w-4 h-4 text-slate-400" />}
+              leftIcon={<Lock className="w-4 h-4 text-palette-ash" />}
               helperText="Note: OS credentials & biometric keys are never uploaded to the cloud."
             />
 
@@ -90,9 +89,9 @@ export default function SignupPage() {
           </form>
         </NeoCard>
 
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs font-sans text-palette-ash">
           Already have an account?{' '}
-          <Link href="/login" className="text-pulse-blue font-bold hover:underline">
+          <Link href="/login" className="text-palette-black dark:text-white font-bold hover:underline">
             Sign In
           </Link>
         </p>

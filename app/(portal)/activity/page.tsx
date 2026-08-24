@@ -1,20 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Activity,
-  Filter,
-  Download,
-  ShieldAlert,
-  ShieldCheck,
-  CheckCircle2,
-  Calendar,
-} from 'lucide-react';
+import { Download, Calendar } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoTimeline } from '@/components/neumorphic/NeoTimeline';
 import { WasThisYouModal } from '@/components/security/WasThisYouModal';
-import { initialEvents, initialDevices } from '@/lib/store';
+import { initialEvents } from '@/lib/store';
 import { SecurityEvent } from '@/lib/types';
 
 export default function ActivityPage() {
@@ -63,10 +55,10 @@ export default function ActivityPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white">
-            Security Timeline
+          <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white tracking-wide">
+            SECURITY TIMELINE
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm font-sans text-palette-ash mt-1">
             Immutable audit record of laptop locks, unlock events, proximity changes, and remote commands.
           </p>
         </div>
@@ -84,8 +76,8 @@ export default function ActivityPage() {
       {/* Filter Bar */}
       <NeoCard variant="flat" className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-pulse-blue" />
-          <span className="text-xs font-heading font-bold text-slate-700 dark:text-slate-300">
+          <Calendar className="w-4 h-4 text-palette-black dark:text-white" />
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-palette-charcoal dark:text-palette-sand">
             Showing {filteredEvents.length} Events
           </span>
         </div>
@@ -93,30 +85,30 @@ export default function ActivityPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterSeverity('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-heading uppercase tracking-wide transition-all ${
               filterSeverity === 'all'
-                ? 'bg-pulse-blue text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+                ? 'bg-palette-black text-white shadow-editorial-sm'
+                : 'text-palette-ash hover:bg-palette-sand-light'
             }`}
           >
             All Activity
           </button>
           <button
             onClick={() => setFilterSeverity('high')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-heading uppercase tracking-wide transition-all ${
               filterSeverity === 'high'
-                ? 'bg-rose-500 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+                ? 'bg-security-danger text-white shadow-editorial-sm'
+                : 'text-palette-ash hover:bg-palette-sand-light'
             }`}
           >
             High Risk / Suspicious
           </button>
           <button
             onClick={() => setFilterSeverity('resolved')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-heading uppercase tracking-wide transition-all ${
               filterSeverity === 'resolved'
-                ? 'bg-emerald-500 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+                ? 'bg-emerald-600 text-white shadow-editorial-sm'
+                : 'text-palette-ash hover:bg-palette-sand-light'
             }`}
           >
             Resolved

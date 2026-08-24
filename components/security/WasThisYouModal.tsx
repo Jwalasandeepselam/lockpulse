@@ -78,37 +78,37 @@ export const WasThisYouModal: React.FC<WasThisYouModalProps> = ({
         <div className="space-y-5">
           {/* Risk Banner */}
           <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-2xl border border-amber-300 dark:border-amber-900/50 flex items-start gap-3 shadow-sm">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-glow-warning">
+            <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-heading font-bold text-sm text-amber-950 dark:text-amber-200">
-                Was this you?
+              <h4 className="font-heading text-lg text-amber-950 dark:text-amber-200 tracking-wide">
+                WAS THIS YOU?
               </h4>
-              <p className="text-xs text-amber-900 dark:text-amber-300 mt-1">
+              <p className="text-xs font-sans text-amber-900 dark:text-amber-300 mt-0.5">
                 Your <strong>{event.device_name || 'Laptop'}</strong> was unlocked while your phone appeared to be away.
               </p>
             </div>
           </div>
 
           {/* Context Inset */}
-          <div className="bg-[#E2EAF2] dark:bg-[#0E1626] rounded-xl p-3.5 shadow-neo-pressed dark:shadow-neo-dark-pressed border border-slate-300/40 dark:border-white/5 space-y-2 text-xs text-slate-700 dark:text-slate-300">
+          <div className="bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl p-4 border border-palette-sand dark:border-[#3E3B3A] space-y-2 text-xs font-sans text-palette-charcoal dark:text-palette-sand">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1.5 text-palette-ash">
                 <Laptop className="w-3.5 h-3.5" /> Device
               </span>
-              <span className="font-semibold">{event.device_name}</span>
+              <span className="font-semibold text-palette-black dark:text-white">{event.device_name}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1.5 text-palette-ash">
                 <Clock className="w-3.5 h-3.5" /> Detected Time
               </span>
-              <span className="font-semibold">
+              <span className="font-semibold text-palette-black dark:text-white">
                 {new Date(event.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1.5 text-palette-ash">
                 <MapPin className="w-3.5 h-3.5" /> Proximity Signal
               </span>
               <span className="font-semibold text-amber-600 dark:text-amber-400">Phone Away (Out of range)</span>
@@ -122,7 +122,7 @@ export const WasThisYouModal: React.FC<WasThisYouModalProps> = ({
               size="md"
               disabled={isProcessing}
               onClick={handleYesItWasMe}
-              leftIcon={<ShieldCheck className="w-4 h-4 text-emerald-500" />}
+              leftIcon={<ShieldCheck className="w-4 h-4 text-emerald-600" />}
             >
               Yes, it was me
             </NeoButton>
@@ -142,24 +142,24 @@ export const WasThisYouModal: React.FC<WasThisYouModalProps> = ({
       {stage === 'escalation' && (
         <div className="space-y-4">
           <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-300 dark:border-rose-900/60 text-xs text-rose-950 dark:text-rose-200">
-            <p className="font-bold">Protect your system immediately</p>
-            <p className="mt-1">
+            <p className="font-bold font-heading uppercase tracking-wide">Protect your system immediately</p>
+            <p className="mt-0.5 font-sans">
               Select an action below to lock the OS screen and initiate recovery protocols.
             </p>
           </div>
 
           <div className="space-y-2.5">
             {/* Action 1: Instant Lock */}
-            <NeoCard variant="flat" className="p-4 flex items-center justify-between gap-3 hover:shadow-neo-raised">
+            <NeoCard variant="flat" className="p-4 flex items-center justify-between gap-3 hover:border-palette-ash">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-red-500/15 text-red-600 dark:text-red-400 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-red-500/10 text-security-danger flex items-center justify-center">
                   <Lock className="w-5 h-5" />
                 </div>
                 <div>
-                  <h5 className="font-heading font-bold text-sm text-slate-900 dark:text-white">
+                  <h5 className="font-heading text-base text-palette-black dark:text-white tracking-wide">
                     Emergency Lock Laptop
                   </h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs font-sans text-palette-ash">
                     Triggers native OS lock screen immediately.
                   </p>
                 </div>
@@ -175,16 +175,16 @@ export const WasThisYouModal: React.FC<WasThisYouModalProps> = ({
             </NeoCard>
 
             {/* Action 2: OS Find My */}
-            <NeoCard variant="flat" className="p-4 flex items-center justify-between gap-3 hover:shadow-neo-raised">
+            <NeoCard variant="flat" className="p-4 flex items-center justify-between gap-3 hover:border-palette-ash">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-charcoal dark:text-palette-sand flex items-center justify-center">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h5 className="font-heading font-bold text-sm text-slate-900 dark:text-white">
-                    Track via {isMac ? 'Apple Find My' : 'Microsoft Find My Device'}
+                  <h5 className="font-heading text-base text-palette-black dark:text-white tracking-wide">
+                    Track via {isMac ? 'Apple Find My' : 'Microsoft Find My'}
                   </h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs font-sans text-palette-ash">
                     Open official platform location & lost mode.
                   </p>
                 </div>
@@ -207,14 +207,14 @@ export const WasThisYouModal: React.FC<WasThisYouModalProps> = ({
 
       {stage === 'locked_success' && (
         <div className="space-y-5 text-center py-4">
-          <div className="w-16 h-16 rounded-3xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center shadow-glow-secure">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
             <CheckCircle2 className="w-9 h-9" />
           </div>
           <div>
-            <h4 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
-              Laptop Locked Successfully
+            <h4 className="font-heading text-2xl text-palette-black dark:text-white tracking-wide">
+              LAPTOP LOCKED SUCCESSFULLY
             </h4>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 max-w-sm mx-auto">
+            <p className="text-xs font-sans text-palette-charcoal dark:text-palette-sand mt-2 max-w-sm mx-auto leading-relaxed">
               Your laptop received the signed security command and entered its native OS lock screen. The incident has been recorded in your audit timeline.
             </p>
           </div>

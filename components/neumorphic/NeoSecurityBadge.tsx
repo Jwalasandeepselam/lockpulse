@@ -24,46 +24,46 @@ export const NeoSecurityBadge: React.FC<NeoSecurityBadgeProps> = ({
   const normalized = status.toLowerCase();
 
   let config = {
-    colorClass: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-    dotClass: 'bg-emerald-500 shadow-glow-secure',
+    colorClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30',
+    dotClass: 'bg-emerald-500',
     icon: ShieldCheck,
     defaultLabel: 'SECURE',
   };
 
   if (normalized === 'warning' || normalized === 'medium') {
     config = {
-      colorClass: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30',
-      dotClass: 'bg-amber-500 shadow-glow-warning',
+      colorClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30',
+      dotClass: 'bg-amber-500',
       icon: AlertTriangle,
       defaultLabel: 'WARNING',
     };
   } else if (normalized === 'danger' || normalized === 'high' || normalized === 'critical') {
     config = {
-      colorClass: 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30',
-      dotClass: 'bg-rose-500 shadow-glow-danger animate-ping',
+      colorClass: 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30',
+      dotClass: 'bg-rose-500 animate-ping',
       icon: ShieldAlert,
       defaultLabel: 'CRITICAL RISK',
     };
   } else if (normalized === 'locked') {
     config = {
-      colorClass: 'bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30',
-      dotClass: 'bg-slate-500',
+      colorClass: 'bg-palette-sand-light dark:bg-[#323030] text-palette-charcoal dark:text-palette-sand border-palette-sand dark:border-[#4A4747]',
+      dotClass: 'bg-palette-ash',
       icon: Lock,
       defaultLabel: 'LOCKED',
     };
   } else if (normalized === 'info' || normalized === 'unknown') {
     config = {
-      colorClass: 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/30',
-      dotClass: 'bg-sky-500',
+      colorClass: 'bg-palette-sand-light/70 text-palette-charcoal dark:text-palette-sand border-palette-sand',
+      dotClass: 'bg-palette-ash',
       icon: Info,
       defaultLabel: 'INFO',
     };
   }
 
   const sizeStyles = {
-    sm: 'px-2.5 py-0.5 text-[11px] gap-1.5',
-    md: 'px-3.5 py-1 text-xs gap-2',
-    lg: 'px-4.5 py-1.5 text-sm gap-2.5',
+    sm: 'px-2.5 py-0.5 text-[10px] gap-1.5',
+    md: 'px-3 py-1 text-xs gap-2',
+    lg: 'px-4 py-1.5 text-sm gap-2.5',
   };
 
   const IconComponent = config.icon;
@@ -72,15 +72,15 @@ export const NeoSecurityBadge: React.FC<NeoSecurityBadgeProps> = ({
     <div
       className={twMerge(
         clsx(
-          'inline-flex items-center font-heading font-bold rounded-full border shadow-neo-sm backdrop-blur-sm tracking-wide select-none',
+          'inline-flex items-center font-heading tracking-wider uppercase rounded-full border shadow-editorial-sm select-none',
           config.colorClass,
           sizeStyles[size],
           className
         )
       )}
     >
-      <span className={clsx('w-2 h-2 rounded-full', config.dotClass)} />
-      {showIcon && <IconComponent className={clsx(size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4')} />}
+      <span className={clsx('w-1.5 h-1.5 rounded-full', config.dotClass)} />
+      {showIcon && <IconComponent className={clsx(size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5')} />}
       <span>{label || config.defaultLabel}</span>
     </div>
   );

@@ -2,21 +2,17 @@
 
 import React, { useState } from 'react';
 import {
-  Shield,
   BellRing,
   KeyRound,
   Users,
   Smartphone,
   CheckCircle2,
-  Lock,
-  Eye,
   AlertTriangle,
   Fingerprint,
 } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoToggle } from '@/components/neumorphic/NeoToggle';
-import { NeoInput } from '@/components/neumorphic/NeoInput';
 import { NeoSecurityBadge } from '@/components/neumorphic/NeoSecurityBadge';
 import { NeoModal } from '@/components/neumorphic/NeoModal';
 
@@ -28,8 +24,6 @@ export default function SecuritySettingsPage() {
   const [notifyOnFailedLogin, setNotifyOnFailedLogin] = useState(true);
 
   // Security Mechanisms
-  const [passkeyEnabled, setPasskeyEnabled] = useState(true);
-  const [totpEnabled, setTotpEnabled] = useState(false);
   const [showRecoveryModal, setShowRecoveryModal] = useState(false);
   const [showTemporarySessionModal, setShowTemporarySessionModal] = useState(false);
 
@@ -37,10 +31,10 @@ export default function SecuritySettingsPage() {
     <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
       {/* Header */}
       <div>
-        <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white">
-          Security & Account Protection
+        <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white tracking-wide">
+          SECURITY & PROTECTION
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm font-sans text-palette-ash mt-1">
           Configure notification dispatch channels, authentication factors, and emergency account recovery.
         </p>
       </div>
@@ -48,20 +42,20 @@ export default function SecuritySettingsPage() {
       {/* Notification Dispatch Preferences (Resend & Push) */}
       <NeoCard variant="raised" className="p-6 sm:p-8 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-pulse-blue/15 text-pulse-blue flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] flex items-center justify-center">
             <BellRing className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
-              Security Alert Notifications
+            <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+              SECURITY NOTIFICATIONS
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-sans text-palette-ash">
               Powered by Resend transactional email and mobile push
             </p>
           </div>
         </div>
 
-        <div className="space-y-4 pt-2 border-t border-slate-300/40 dark:border-white/10">
+        <div className="space-y-4 pt-2 border-t border-palette-sand/60 dark:border-[#3E3B3A]">
           <NeoToggle
             checked={notifyOnUnlockAway}
             onChange={setNotifyOnUnlockAway}
@@ -92,39 +86,39 @@ export default function SecuritySettingsPage() {
       {/* Authentication & Hardware Factors */}
       <NeoCard variant="raised" className="p-6 sm:p-8 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] flex items-center justify-center">
             <Fingerprint className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
-              Authentication & Passkeys
+            <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+              AUTHENTICATION & PASSKEYS
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-sans text-palette-ash">
               FIDO2 / WebAuthn and cryptographic device binding
             </p>
           </div>
         </div>
 
-        <div className="space-y-4 pt-2 border-t border-slate-300/40 dark:border-white/10">
-          <div className="flex items-center justify-between p-4 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 rounded-xl shadow-neo-pressed">
+        <div className="space-y-4 pt-2 border-t border-palette-sand/60 dark:border-[#3E3B3A]">
+          <div className="flex items-center justify-between p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A]">
             <div className="space-y-0.5">
-              <div className="font-heading font-bold text-sm text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <div className="font-heading text-base text-palette-black dark:text-white tracking-wide flex items-center gap-2">
                 <span>Passkey (Touch ID / Windows Hello)</span>
                 <NeoSecurityBadge status="secure" size="sm" label="ACTIVE" />
               </div>
-              <p className="text-xs text-slate-500">Hardware-bound cryptographic authenticator</p>
+              <p className="text-xs font-sans text-palette-ash">Hardware-bound cryptographic authenticator</p>
             </div>
             <NeoButton variant="secondary" size="sm">
               Manage Keys
             </NeoButton>
           </div>
 
-          <div className="flex items-center justify-between p-4 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 rounded-xl shadow-neo-pressed">
+          <div className="flex items-center justify-between p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A]">
             <div className="space-y-0.5">
-              <span className="font-heading font-bold text-sm text-slate-800 dark:text-slate-200">
+              <span className="font-heading text-base text-palette-black dark:text-white tracking-wide">
                 Emergency Recovery Codes
               </span>
-              <p className="text-xs text-slate-500">Offline one-time cryptographic recovery codes</p>
+              <p className="text-xs font-sans text-palette-ash">Offline one-time cryptographic recovery codes</p>
             </div>
             <NeoButton
               variant="secondary"
@@ -141,20 +135,20 @@ export default function SecuritySettingsPage() {
       {/* Temporary Guest / Friend Device Session */}
       <NeoCard variant="raised" className="p-6 sm:p-8 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-500/15 text-pulse-blue flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] flex items-center justify-center">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
-              Temporary Friend/Family Session
+            <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+              TEMPORARY ACCESS SESSION
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-sans text-palette-ash">
               Access your devices from someone else's phone without registering it as a trusted device
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-slate-600 dark:text-slate-300">
+        <p className="text-xs font-sans text-palette-charcoal dark:text-palette-sand leading-relaxed">
           If your phone is lost or out of battery, you can create an expiring, temporary session to lock your laptop from another device. It will automatically expire and leave no cached credentials.
         </p>
 
@@ -183,7 +177,7 @@ export default function SecuritySettingsPage() {
             <p>Each recovery code can only be used once to regain access if you lose both your phone and laptop.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 font-mono text-xs p-4 bg-[#E5ECF4] dark:bg-[#0D1524] rounded-xl shadow-neo-pressed text-center font-bold text-slate-800 dark:text-slate-100">
+          <div className="grid grid-cols-2 gap-2 font-mono text-xs p-4 bg-palette-sand-light dark:bg-[#1A1919] rounded-xl border border-palette-sand text-center font-bold text-palette-black dark:text-white">
             <div>8492-3819</div>
             <div>5910-2481</div>
             <div>7194-0582</div>
@@ -206,12 +200,12 @@ export default function SecuritySettingsPage() {
         subtitle="15-Minute Ephemeral Access"
       >
         <div className="space-y-4">
-          <p className="text-xs text-slate-600 dark:text-slate-300">
+          <p className="text-xs font-sans text-palette-charcoal dark:text-palette-sand">
             This session is sandboxed. No credentials or biometric keys are stored on this browser. The session will automatically revoke in 15 minutes or when you close the tab.
           </p>
 
           <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl text-xs text-emerald-800 dark:text-emerald-300 font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>Ephemeral Mode Active</span>
           </div>
 

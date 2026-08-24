@@ -24,31 +24,31 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
   ...props
 }) => {
   const sizeStyles = {
-    sm: 'px-3.5 py-1.5 text-xs font-semibold rounded-xl gap-1.5',
-    md: 'px-5 py-2.5 text-sm font-semibold rounded-xl gap-2',
-    lg: 'px-6 py-3.5 text-base font-bold rounded-2xl gap-2.5',
+    sm: 'px-3.5 py-1.5 text-xs font-bold rounded-xl gap-1.5',
+    md: 'px-5 py-2.5 text-sm font-bold rounded-xl gap-2',
+    lg: 'px-6 py-3.5 text-base font-bold rounded-xl gap-2.5',
     xl: 'px-8 py-4.5 text-lg font-bold rounded-2xl gap-3',
   };
 
   const variantStyles = {
-    // Primary - High-visibility Electric Cyan/Blue
+    // Primary - Deep Obsidian Black with white text
     primary:
-      'bg-gradient-to-r from-pulse-blue to-pulse-cyan text-white shadow-neo-raised hover:shadow-glow-accent hover:brightness-105 active:scale-[0.98] border border-pulse-sky/30',
-    // Secondary - Tactile Neumorphic Raised Surface
+      'bg-palette-black hover:bg-palette-charcoal dark:bg-palette-white dark:hover:bg-palette-sand dark:text-palette-black text-white shadow-editorial-md hover:shadow-editorial-hover active:scale-[0.98] transition-all tracking-wide uppercase font-heading',
+    // Secondary - Clean Editorial White with sand border
     secondary:
-      'bg-surface-card dark:bg-surface-darkcard text-slate-800 dark:text-slate-100 shadow-neo-flat dark:shadow-neo-dark-flat hover:shadow-neo-raised dark:hover:shadow-neo-dark-raised active:shadow-neo-pressed dark:active:shadow-neo-dark-pressed border border-white/70 dark:border-white/10',
-    // Danger - High contrast Lockdown / Revoke Red
+      'bg-palette-white dark:bg-[#2A2828] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#4A4747] shadow-editorial-sm hover:border-palette-ash hover:text-palette-black dark:hover:text-white active:scale-[0.98] font-sans font-semibold',
+    // Danger - High contrast Lockdown Red
     danger:
-      'bg-gradient-to-r from-security-danger to-security-danger-dark text-white shadow-neo-raised hover:shadow-glow-danger hover:brightness-105 active:scale-[0.98] border border-red-400/40',
+      'bg-security-danger hover:bg-security-danger-dark text-white shadow-editorial-md hover:shadow-glow-danger active:scale-[0.98] transition-all tracking-wide uppercase font-heading',
     // Warning - Amber
     warning:
-      'bg-gradient-to-r from-security-warning to-security-warning-dark text-slate-950 font-bold shadow-neo-raised hover:shadow-glow-warning hover:brightness-105 active:scale-[0.98]',
+      'bg-security-warning hover:bg-security-warning-dark text-palette-black font-bold shadow-editorial-md active:scale-[0.98]',
     // Ghost - Subtle flat
     ghost:
-      'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 border border-transparent',
-    // Inset - Active/Toggled state
+      'bg-transparent text-palette-ash hover:text-palette-black dark:hover:text-white hover:bg-palette-sand/40 dark:hover:bg-[#2A2828] font-sans font-medium',
+    // Inset - Active state
     inset:
-      'bg-[#E2EAF2] dark:bg-[#0E1626] text-pulse-blue dark:text-pulse-sky shadow-neo-pressed dark:shadow-neo-dark-pressed border border-slate-300/60 dark:border-white/5 font-bold',
+      'bg-palette-sand-light dark:bg-[#141313] text-palette-black dark:text-white border border-palette-sand shadow-editorial-inset font-bold',
   };
 
   return (
@@ -56,7 +56,7 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
       disabled={disabled || isLoading}
       className={twMerge(
         clsx(
-          'inline-flex items-center justify-center font-heading transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-pulse-cyan focus-visible:ring-offset-2',
+          'inline-flex items-center justify-center transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-palette-charcoal',
           sizeStyles[size],
           variantStyles[variant],
           (disabled || isLoading) && 'opacity-60 cursor-not-allowed pointer-events-none',

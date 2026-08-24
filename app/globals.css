@@ -1,104 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: #EEF2F6;
-    --foreground: #1E293B;
-    --card: #E9EFF6;
-    --card-foreground: #0F172A;
-    --accent: #0284C7;
-    --accent-foreground: #FFFFFF;
-    --muted: #64748B;
-    --border: #CBD5E1;
+    --background: #F5F5F5;
+    --foreground: #2C2A29;
+    --card: #FFFFFF;
+    --card-foreground: #222020;
+    --palette-white: #FFFFFF;
+    --palette-sand: #D6D4CE;
+    --palette-ash: #7E7A7A;
+    --palette-charcoal: #4E4B4B;
+    --palette-black: #1E1D1D;
+    --muted: #7E7A7A;
+    --border: #D6D4CE;
   }
 
   .dark {
-    --background: #0B1120;
-    --foreground: #F1F5F9;
-    --card: #131C2E;
-    --card-foreground: #F8FAFC;
-    --accent: #38BDF8;
-    --accent-foreground: #0B1120;
-    --muted: #94A3B8;
-    --border: #1E293B;
+    --background: #181717;
+    --foreground: #F5F5F5;
+    --card: #222020;
+    --card-foreground: #FFFFFF;
+    --palette-white: #FFFFFF;
+    --palette-sand: #3E3B3A;
+    --palette-ash: #9E9A99;
+    --palette-charcoal: #D6D4CE;
+    --palette-black: #0E0D0D;
+    --muted: #9E9A99;
+    --border: #3A3837;
   }
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Neumorphic Utilities */
-.neo-surface {
-  background: #EEF2F6;
-  box-shadow: 8px 8px 18px rgba(166, 180, 200, 0.45), -8px -8px 18px rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+h1, h2, h3, .font-anton {
+  font-family: 'Anton', 'Epilogue', sans-serif;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
-.dark .neo-surface {
-  background: #131C2E;
-  box-shadow: 8px 8px 18px rgba(4, 7, 14, 0.7), -8px -8px 18px rgba(26, 38, 62, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* Squarespace Palette Utilities */
+.palette-surface {
+  background: #FFFFFF;
+  border: 1px solid #D6D4CE;
+  box-shadow: 0 4px 20px -2px rgba(44, 42, 41, 0.05), 0 2px 6px -1px rgba(44, 42, 41, 0.03);
 }
 
-.neo-inset {
-  background: #E5ECF4;
-  box-shadow: inset 4px 4px 8px rgba(155, 170, 195, 0.45), inset -4px -4px 8px rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(203, 213, 225, 0.4);
+.dark .palette-surface {
+  background: #222020;
+  border: 1px solid #3E3B3A;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
-.dark .neo-inset {
-  background: #0D1524;
-  box-shadow: inset 4px 4px 8px rgba(4, 7, 14, 0.85), inset -4px -4px 8px rgba(26, 38, 62, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.palette-inset {
+  background: #EBE9E3;
+  border: 1px solid #D6D4CE;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.neo-btn {
-  background: #EEF2F6;
-  box-shadow: 5px 5px 12px rgba(166, 180, 200, 0.45), -5px -5px 12px rgba(255, 255, 255, 0.9);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.neo-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 7px 7px 16px rgba(166, 180, 200, 0.5), -7px -7px 16px rgba(255, 255, 255, 1);
-}
-
-.neo-btn:active {
-  transform: translateY(1px);
-  box-shadow: inset 3px 3px 6px rgba(155, 170, 195, 0.45), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
-}
-
-.dark .neo-btn {
-  background: #152035;
-  box-shadow: 5px 5px 12px rgba(4, 7, 14, 0.7), -5px -5px 12px rgba(26, 38, 62, 0.35);
-}
-
-.dark .neo-btn:hover {
-  box-shadow: 7px 7px 16px rgba(4, 7, 14, 0.85), -7px -7px 16px rgba(26, 38, 62, 0.45);
-}
-
-.dark .neo-btn:active {
-  box-shadow: inset 3px 3px 6px rgba(4, 7, 14, 0.85), inset -3px -3px 6px rgba(26, 38, 62, 0.3);
-}
-
-/* Glass & Neumorphic Overlay */
-.neo-glass {
-  background: rgba(238, 242, 246, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.dark .neo-glass {
-  background: rgba(11, 17, 32, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+.dark .palette-inset {
+  background: #141313;
+  border: 1px solid #2F2D2D;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Custom Scrollbar */
@@ -110,9 +82,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #D6D4CE;
   border-radius: 999px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #4E4B4B;
 }

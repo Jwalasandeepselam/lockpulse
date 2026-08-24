@@ -1,22 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   Laptop,
-  QrCode,
-  KeyRound,
-  ShieldCheck,
   CheckCircle2,
   Copy,
   Check,
   RefreshCw,
   Terminal,
   ArrowRight,
-  ArrowLeft,
-  Apple,
+  ShieldCheck,
   Monitor,
+  Apple,
 } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
@@ -28,8 +25,7 @@ export default function ConnectDevicePage() {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [selectedOS, setSelectedOS] = useState<'windows' | 'macos'>('windows');
   const [copiedCode, setCopiedCode] = useState(false);
-  const [pairingCode, setPairingCode] = useState('LP-9824-7612');
-  const [manualCodeInput, setManualCodeInput] = useState('');
+  const [pairingCode] = useState('LP-9824-7612');
   const [isVerifying, setIsVerifying] = useState(false);
   const [deviceName, setDeviceName] = useState('My Work Laptop');
 
@@ -49,7 +45,6 @@ export default function ConnectDevicePage() {
 
   const handleVerifyPairing = async () => {
     setIsVerifying(true);
-    // Simulate cryptographic challenge verification
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsVerifying(false);
     setCurrentStep(5);
@@ -62,20 +57,20 @@ export default function ConnectDevicePage() {
         {[1, 2, 3, 4, 5].map((step) => (
           <div key={step} className="flex items-center gap-2">
             <div
-              className={`w-8 h-8 rounded-xl font-heading font-bold text-xs flex items-center justify-center transition-all ${
+              className={`w-8 h-8 rounded-xl font-heading text-xs flex items-center justify-center transition-all ${
                 currentStep === step
-                  ? 'bg-pulse-blue text-white shadow-glow-accent'
+                  ? 'bg-palette-black text-white shadow-editorial-sm'
                   : currentStep > step
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-[#E5ECF4] dark:bg-[#0E1626] text-slate-500 shadow-neo-pressed'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-ash'
               }`}
             >
               {currentStep > step ? <Check className="w-4 h-4" /> : step}
             </div>
             {step < 5 && (
               <div
-                className={`hidden sm:block w-8 sm:w-12 h-1 rounded-full transition-all ${
-                  currentStep > step ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
+                className={`hidden sm:block w-8 sm:w-12 h-0.5 transition-all ${
+                  currentStep > step ? 'bg-emerald-600' : 'bg-palette-sand dark:bg-[#3E3B3A]'
                 }`}
               />
             )}
@@ -85,19 +80,19 @@ export default function ConnectDevicePage() {
 
       {/* Step 1: Welcome */}
       {currentStep === 1 && (
-        <NeoCard variant="raised" className="p-8 space-y-6 text-center">
-          <div className="w-16 h-16 rounded-3xl bg-pulse-blue/15 text-pulse-blue mx-auto flex items-center justify-center shadow-neo-sm">
+        <NeoCard variant="raised" className="p-8 sm:p-10 space-y-6 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-palette-sand-light dark:bg-[#1E1D1D] border border-palette-sand dark:border-[#3E3B3A] text-palette-charcoal dark:text-palette-sand mx-auto flex items-center justify-center shadow-editorial-sm">
             <ShieldCheck className="w-9 h-9" />
           </div>
 
           <div>
-            <span className="text-xs font-heading font-bold uppercase tracking-widest text-pulse-blue">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-palette-ash">
               Step 1 of 5
             </span>
-            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white mt-1">
-              Welcome to LockPulse
+            <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white mt-1 tracking-wide">
+              WELCOME TO LOCKPULSE
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm font-sans text-palette-charcoal dark:text-palette-sand mt-2 max-w-md mx-auto leading-relaxed">
               Let's set up your personal laptop security control plane. In just a couple of minutes, your phone and computer will be paired via cryptographic keys.
             </p>
           </div>
@@ -114,50 +109,50 @@ export default function ConnectDevicePage() {
       {currentStep === 2 && (
         <NeoCard variant="raised" className="p-8 space-y-6">
           <div className="text-center">
-            <span className="text-xs font-heading font-bold uppercase tracking-widest text-pulse-blue">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-palette-ash">
               Step 2 of 5
             </span>
-            <h2 className="font-heading font-extrabold text-2xl text-slate-900 dark:text-white mt-1">
-              How LockPulse Protects You
+            <h2 className="font-heading font-extrabold text-3xl text-palette-black dark:text-white mt-1 tracking-wide">
+              HOW LOCKPULSE PROTECTS YOU
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+            <p className="text-xs sm:text-sm font-sans text-palette-ash mt-1">
               Your personal security network between your phone and laptop
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div className="p-4 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 rounded-xl shadow-neo-pressed space-y-1.5">
-              <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Out-of-Band Remote Lock
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
+            <div className="p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A] space-y-1.5">
+              <div className="font-bold text-palette-black dark:text-white flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Out-of-Band Remote Lock
               </div>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-palette-ash">
                 Trigger your laptop's native lock screen from anywhere in the world in under 1 second.
               </p>
             </div>
 
-            <div className="p-4 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 rounded-xl shadow-neo-pressed space-y-1.5">
-              <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Suspicious Unlock Detection
+            <div className="p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A] space-y-1.5">
+              <div className="font-bold text-palette-black dark:text-white flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Suspicious Unlock Detection
               </div>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-palette-ash">
                 Receive "Was this you?" push alerts if your laptop is unlocked while your phone is away.
               </p>
             </div>
 
-            <div className="p-4 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 rounded-xl shadow-neo-pressed space-y-1.5">
-              <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Zero Credential Storage
+            <div className="p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A] space-y-1.5">
+              <div className="font-bold text-palette-black dark:text-white flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Zero Credential Storage
               </div>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-palette-ash">
                 No passwords or private keys are ever uploaded to cloud servers.
               </p>
             </div>
 
-            <div className="p-4 bg-[#E5ECF4]/60 dark:bg-[#0D1524]/60 rounded-xl shadow-neo-pressed space-y-1.5">
-              <div className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Non-Invasive Security
+            <div className="p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A] space-y-1.5">
+              <div className="font-bold text-palette-black dark:text-white flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Non-Invasive Security
               </div>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-palette-ash">
                 No surveillance, no webcam monitoring, and no invasive screen tracking.
               </p>
             </div>
@@ -178,13 +173,13 @@ export default function ConnectDevicePage() {
       {currentStep === 3 && (
         <NeoCard variant="raised" className="p-8 space-y-6">
           <div>
-            <span className="text-xs font-heading font-bold uppercase tracking-widest text-pulse-blue">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-palette-ash">
               Step 3 of 5
             </span>
-            <h2 className="font-heading font-extrabold text-2xl text-slate-900 dark:text-white mt-1">
-              Select Laptop Operating System
+            <h2 className="font-heading font-extrabold text-3xl text-palette-black dark:text-white mt-1 tracking-wide">
+              SELECT OPERATING SYSTEM
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+            <p className="text-xs sm:text-sm font-sans text-palette-ash mt-1">
               LockPulse utilizes dedicated platform security APIs for your specific OS.
             </p>
           </div>
@@ -192,28 +187,28 @@ export default function ConnectDevicePage() {
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => setSelectedOS('windows')}
-              className={`p-5 rounded-2xl flex flex-col items-center gap-3 transition-all border ${
+              className={`p-5 rounded-2xl flex flex-col items-center gap-2.5 transition-all border ${
                 selectedOS === 'windows'
-                  ? 'bg-pulse-blue/10 border-pulse-blue shadow-glow-accent text-pulse-blue'
-                  : 'bg-surface-card dark:bg-surface-darkcard border-white/50 text-slate-700 dark:text-slate-300 shadow-neo-flat'
+                  ? 'bg-palette-black text-white border-palette-black shadow-editorial-sm'
+                  : 'bg-palette-white dark:bg-[#222020] border-palette-sand dark:border-[#3E3B3A] text-palette-charcoal dark:text-palette-sand'
               }`}
             >
               <Monitor className="w-8 h-8" />
-              <span className="font-heading font-bold text-sm">Windows 10 / 11</span>
-              <span className="text-[10px] text-slate-500 font-mono">user32!LockWorkStation</span>
+              <span className="font-heading text-base tracking-wide">Windows 10 / 11</span>
+              <span className="text-[10px] font-mono opacity-75">user32!LockWorkStation</span>
             </button>
 
             <button
               onClick={() => setSelectedOS('macos')}
-              className={`p-5 rounded-2xl flex flex-col items-center gap-3 transition-all border ${
+              className={`p-5 rounded-2xl flex flex-col items-center gap-2.5 transition-all border ${
                 selectedOS === 'macos'
-                  ? 'bg-pulse-blue/10 border-pulse-blue shadow-glow-accent text-pulse-blue'
-                  : 'bg-surface-card dark:bg-surface-darkcard border-white/50 text-slate-700 dark:text-slate-300 shadow-neo-flat'
+                  ? 'bg-palette-black text-white border-palette-black shadow-editorial-sm'
+                  : 'bg-palette-white dark:bg-[#222020] border-palette-sand dark:border-[#3E3B3A] text-palette-charcoal dark:text-palette-sand'
               }`}
             >
               <Apple className="w-8 h-8" />
-              <span className="font-heading font-bold text-sm">macOS Sonoma / Sequoia</span>
-              <span className="text-[10px] text-slate-500 font-mono">SACLockScreenImmediate</span>
+              <span className="font-heading text-base tracking-wide">macOS Sonoma / Sequoia</span>
+              <span className="text-[10px] font-mono opacity-75">SACLockScreenImmediate</span>
             </button>
           </div>
 
@@ -241,49 +236,49 @@ export default function ConnectDevicePage() {
       {currentStep === 4 && (
         <NeoCard variant="raised" className="p-8 space-y-6">
           <div className="text-center">
-            <span className="text-xs font-heading font-bold uppercase tracking-widest text-pulse-blue">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-palette-ash">
               Step 4 of 5
             </span>
-            <h2 className="font-heading font-extrabold text-2xl text-slate-900 dark:text-white mt-1">
-              Pair with Laptop Agent
+            <h2 className="font-heading font-extrabold text-3xl text-palette-black dark:text-white mt-1 tracking-wide">
+              PAIR WITH LAPTOP AGENT
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+            <p className="text-xs sm:text-sm font-sans text-palette-ash mt-1">
               Scan this QR code from your LockPulse laptop agent or enter the secure challenge code.
             </p>
           </div>
 
           {/* QR Code Inset Box */}
-          <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-neo-pressed dark:shadow-neo-dark-pressed max-w-xs mx-auto">
+          <div className="flex flex-col items-center justify-center p-6 bg-palette-white dark:bg-white rounded-2xl border border-palette-sand max-w-xs mx-auto shadow-editorial-sm">
             <QRCodeSVG value={qrPayload} size={180} level="M" />
-            <span className="text-[11px] font-mono text-slate-400 mt-3 flex items-center gap-1">
+            <span className="text-[11px] font-mono text-palette-ash mt-3 flex items-center gap-1">
               <RefreshCw className="w-3 h-3" /> Challenge expires in 5:00
             </span>
           </div>
 
           {/* Manual Code */}
-          <div className="p-4 bg-[#E5ECF4]/70 dark:bg-[#0D1524]/70 rounded-xl shadow-neo-pressed text-center space-y-2">
-            <span className="text-xs font-semibold text-slate-500 block">Short-Lived Pairing Challenge:</span>
+          <div className="p-4 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl border border-palette-sand dark:border-[#3E3B3A] text-center space-y-2">
+            <span className="text-xs font-sans text-palette-ash block">Short-Lived Pairing Challenge:</span>
             <div className="flex items-center justify-center gap-3">
-              <span className="font-mono font-extrabold text-xl tracking-widest text-pulse-blue dark:text-pulse-sky">
+              <span className="font-mono font-extrabold text-2xl tracking-widest text-palette-black dark:text-white">
                 {pairingCode}
               </span>
               <button
                 onClick={handleCopyCode}
-                className="p-1.5 rounded-lg bg-surface-card shadow-neo-sm text-slate-600 hover:text-pulse-blue transition-colors"
+                className="p-1.5 rounded-lg bg-palette-white dark:bg-[#2A2828] border border-palette-sand text-palette-ash hover:text-palette-black transition-colors"
                 title="Copy code"
               >
-                {copiedCode ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
-          {/* Quick Terminal / Simulator Trigger */}
-          <div className="p-3 bg-slate-900 text-slate-200 rounded-xl text-xs font-mono flex items-center justify-between">
+          {/* Terminal / Runner Trigger */}
+          <div className="p-3 bg-palette-black text-white rounded-xl text-xs font-mono flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-pulse-sky" />
+              <Terminal className="w-4 h-4 text-emerald-400" />
               <span>npm run agent:sim</span>
             </div>
-            <span className="text-[10px] text-slate-400">Agent Background Runner</span>
+            <span className="text-[10px] text-palette-sand">Agent Runner Daemon</span>
           </div>
 
           <div className="flex items-center justify-between pt-4">
@@ -305,17 +300,17 @@ export default function ConnectDevicePage() {
 
       {/* Step 5: Device Connected Celebration */}
       {currentStep === 5 && (
-        <NeoCard variant="floating" glow="secure" className="p-8 space-y-6 text-center">
-          <div className="w-20 h-20 rounded-3xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center shadow-glow-secure animate-pulse-glow">
+        <NeoCard variant="floating" glow="secure" className="p-8 sm:p-10 space-y-6 text-center">
+          <div className="w-20 h-20 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 mx-auto flex items-center justify-center">
             <CheckCircle2 className="w-12 h-12" />
           </div>
 
           <div>
             <NeoSecurityBadge status="secure" size="md" label="ED25519 PAIRING VERIFIED" />
-            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white mt-3">
-              Your laptop is protected.
+            <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white mt-3 tracking-wide">
+              YOUR LAPTOP IS PROTECTED.
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm font-sans text-palette-charcoal dark:text-palette-sand mt-2 max-w-md mx-auto leading-relaxed">
               <strong>{deviceName}</strong> ({selectedOS === 'windows' ? 'Windows' : 'macOS'}) is now successfully linked to your LockPulse network.
             </p>
           </div>
