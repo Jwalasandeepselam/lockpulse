@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
-const isProd = process.env.NODE_ENV === 'production';
-const repoName = 'lockpulse';
+const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
+
+// GitHub Pages runs under a repo subpath (/lockpulse), whereas Vercel and local dev run at root (/)
+const basePath = isGithubActions ? '/lockpulse' : '';
 
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: isProd ? `/${repoName}` : '',
-  assetPrefix: isProd ? `/${repoName}/` : '',
+  basePath: basePath,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
   images: {
     unoptimized: true,
   },

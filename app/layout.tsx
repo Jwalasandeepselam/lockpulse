@@ -15,7 +15,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#EEF2F6',
+  themeColor: '#F5F5F5',
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-canvas-light dark:bg-canvas-dark text-foreground transition-colors duration-300 antialiased font-sans">
+      <body className="min-h-screen bg-palette-canvas dark:bg-[#141313] text-foreground transition-colors duration-300 antialiased font-sans">
         {children}
       </body>
     </html>
