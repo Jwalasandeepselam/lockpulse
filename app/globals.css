@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #EEF2F6;
+    --foreground: #1E293B;
+    --card: #E9EFF6;
+    --card-foreground: #0F172A;
+    --accent: #0284C7;
+    --accent-foreground: #FFFFFF;
+    --muted: #64748B;
+    --border: #CBD5E1;
+  }
+
+  .dark {
+    --background: #0B1120;
+    --foreground: #F1F5F9;
+    --card: #131C2E;
+    --card-foreground: #F8FAFC;
+    --accent: #38BDF8;
+    --accent-foreground: #0B1120;
+    --muted: #94A3B8;
+    --border: #1E293B;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Neumorphic Utilities */
+.neo-surface {
+  background: #EEF2F6;
+  box-shadow: 8px 8px 18px rgba(166, 180, 200, 0.45), -8px -8px 18px rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.dark .neo-surface {
+  background: #131C2E;
+  box-shadow: 8px 8px 18px rgba(4, 7, 14, 0.7), -8px -8px 18px rgba(26, 38, 62, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.neo-inset {
+  background: #E5ECF4;
+  box-shadow: inset 4px 4px 8px rgba(155, 170, 195, 0.45), inset -4px -4px 8px rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(203, 213, 225, 0.4);
+}
+
+.dark .neo-inset {
+  background: #0D1524;
+  box-shadow: inset 4px 4px 8px rgba(4, 7, 14, 0.85), inset -4px -4px 8px rgba(26, 38, 62, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.neo-btn {
+  background: #EEF2F6;
+  box-shadow: 5px 5px 12px rgba(166, 180, 200, 0.45), -5px -5px 12px rgba(255, 255, 255, 0.9);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neo-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 7px 7px 16px rgba(166, 180, 200, 0.5), -7px -7px 16px rgba(255, 255, 255, 1);
+}
+
+.neo-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 3px 3px 6px rgba(155, 170, 195, 0.45), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+}
+
+.dark .neo-btn {
+  background: #152035;
+  box-shadow: 5px 5px 12px rgba(4, 7, 14, 0.7), -5px -5px 12px rgba(26, 38, 62, 0.35);
+}
+
+.dark .neo-btn:hover {
+  box-shadow: 7px 7px 16px rgba(4, 7, 14, 0.85), -7px -7px 16px rgba(26, 38, 62, 0.45);
+}
+
+.dark .neo-btn:active {
+  box-shadow: inset 3px 3px 6px rgba(4, 7, 14, 0.85), inset -3px -3px 6px rgba(26, 38, 62, 0.3);
+}
+
+/* Glass & Neumorphic Overlay */
+.neo-glass {
+  background: rgba(238, 242, 246, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .neo-glass {
+  background: rgba(11, 17, 32, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
