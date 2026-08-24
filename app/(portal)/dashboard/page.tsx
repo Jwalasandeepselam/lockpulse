@@ -9,16 +9,13 @@ import {
   Activity,
   Plus,
   Zap,
-  Lock,
   ChevronRight,
-  Sparkles,
+  Shield,
   AlertTriangle,
 } from 'lucide-react';
-import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoDeviceCard } from '@/components/neumorphic/NeoDeviceCard';
 import { NeoTimeline } from '@/components/neumorphic/NeoTimeline';
-import { NeoSecurityBadge } from '@/components/neumorphic/NeoSecurityBadge';
 import { WasThisYouModal } from '@/components/security/WasThisYouModal';
 import { initialProfile, initialDevices, initialEvents } from '@/lib/store';
 import { Device, SecurityEvent } from '@/lib/types';
@@ -111,108 +108,107 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Top Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-palette-ash">
-            {greeting}, {profile.full_name || 'User'}
-          </span>
-          <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white mt-1 tracking-wide">
-            SECURITY OVERVIEW
-          </h1>
+    <div className="space-y-8 animate-fadeIn pb-12">
+      {/* Mobile Top Header (Greeting + Verified Badge) */}
+      <div className="flex justify-between items-center w-full">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-full shadow-neu-raised bg-surface-container flex items-center justify-center text-primary font-heading font-bold overflow-hidden border border-outline-variant/40">
+            S
+          </div>
+          <div>
+            <h1 className="font-heading text-lg sm:text-2xl font-bold text-primary dark:text-primary-fixed">
+              {greeting}, {profile.full_name?.split(' ')[0] || 'Sandeep'}
+            </h1>
+            <span className="text-[11px] font-mono text-on-surface-variant uppercase tracking-wider block">
+              LockPulse Security Plane
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Link href="/devices/connect">
-            <NeoButton variant="primary" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-              Add Device
-            </NeoButton>
+            <button className="flex items-center justify-center w-10 h-10 rounded-full text-primary dark:text-primary-fixed shadow-neu-raised hover:scale-105 transition-all border border-outline-variant/30">
+              <Plus className="w-5 h-5" />
+            </button>
           </Link>
+          <div className="flex items-center justify-center w-10 h-10 rounded-full text-secondary shadow-neu-raised border border-outline-variant/30">
+            <ShieldCheck className="w-5 h-5" />
+          </div>
         </div>
       </div>
 
-      {/* Main Security Overview Banner */}
-      <NeoCard
-        variant="raised"
-        glow={isOverallSecure ? 'secure' : 'danger'}
-        className="p-6 sm:p-8 relative overflow-hidden"
-      >
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
+      {/* Centerpiece: Tactile Neumorphic Security Orb from Stitch Design */}
+      <section className="flex flex-col items-center justify-center w-full py-4">
+        <div
+          className={`relative w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-surface dark:bg-[#191b24] shadow-neu-raised flex items-center justify-center animate-pulse-slow border border-outline-variant/30 ${
+            isOverallSecure ? '' : 'ring-4 ring-error/40 glow-coral'
+          }`}
+        >
+          {/* Inner recessed well for the glowing core */}
+          <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-surface dark:bg-[#191b24] shadow-neu-recessed flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+            {/* Glowing LED Ring */}
             <div
-              className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all ${
+              className={`absolute inset-0 rounded-full border ${
                 isOverallSecure
-                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 shadow-editorial-sm'
-                  : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30 animate-pulse'
+                  ? 'border-secondary-container/50 animate-glow-pulse'
+                  : 'border-error/60 animate-ping'
               }`}
-            >
-              {isOverallSecure ? (
-                <ShieldCheck className="w-9 h-9 sm:w-11 sm:h-11" />
-              ) : (
-                <ShieldAlert className="w-9 h-9 sm:w-11 sm:h-11" />
-              )}
-            </div>
+            />
 
-            <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-palette-ash">
-                  System Status
-                </span>
-                <NeoSecurityBadge
-                  status={isOverallSecure ? 'secure' : 'danger'}
-                  size="sm"
-                  label={isOverallSecure ? 'ALL SYSTEMS SECURE' : 'ACTION REQUIRED'}
-                />
-              </div>
-
-              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-palette-black dark:text-white tracking-wide">
-                {isOverallSecure
-                  ? `${devices.length} Devices Protected`
-                  : 'Suspicious Unlock Detected'}
-              </h2>
-
-              <p className="text-xs sm:text-sm font-sans text-palette-charcoal dark:text-palette-sand mt-1 max-w-lg">
-                {isOverallSecure
-                  ? 'Cryptographic lock channels active. No unauthorized access detected.'
-                  : 'A laptop was unlocked while your phone was away. Review the alert below.'}
-              </p>
-            </div>
+            {isOverallSecure ? (
+              <>
+                <Shield className="w-12 h-12 text-secondary mb-2" />
+                <h2 className="font-heading text-2xl font-bold text-secondary tracking-tight z-10">
+                  ALL SECURE
+                </h2>
+                <p className="font-mono text-xs text-on-surface-variant mt-1 z-10 uppercase tracking-wider">
+                  {devices.length} devices protected
+                </p>
+              </>
+            ) : (
+              <>
+                <ShieldAlert className="w-12 h-12 text-error mb-2 animate-bounce" />
+                <h2 className="font-heading text-xl font-bold text-error tracking-tight z-10">
+                  ATTENTION
+                </h2>
+                <p className="font-mono text-[11px] text-error mt-1 z-10 uppercase tracking-wider">
+                  Suspicious unlock
+                </p>
+              </>
+            )}
           </div>
-
-          {/* Quick Alert CTA */}
-          {!isOverallSecure && activeWasThisYouEvent && (
-            <div className="w-full md:w-auto">
-              <NeoButton
-                variant="danger"
-                size="lg"
-                onClick={() => setIsWasThisYouOpen(true)}
-                leftIcon={<AlertTriangle className="w-5 h-5" />}
-                className="w-full sm:w-auto"
-              >
-                Resolve "Was This You?"
-              </NeoButton>
-            </div>
-          )}
         </div>
-      </NeoCard>
 
-      {/* Main Grid: Devices & Recent Activity */}
+        {/* Action Banner if Incident Detected */}
+        {!isOverallSecure && activeWasThisYouEvent && (
+          <div className="mt-4 animate-scaleUp">
+            <button
+              onClick={() => setIsWasThisYouOpen(true)}
+              className="px-6 py-3 rounded-full bg-error hover:bg-[#93000a] text-white font-heading font-bold text-xs shadow-neu-button flex items-center gap-2 tracking-wide uppercase"
+            >
+              <AlertTriangle className="w-4 h-4" />
+              <span>Review "Was This You?" Alert</span>
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Main Content Grid: Devices & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Devices Column */}
-        <div className="lg:col-span-2 space-y-5">
-          <div className="flex items-center justify-between">
+        {/* Devices Section */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex justify-between items-center px-1">
             <div className="flex items-center gap-2">
-              <Laptop className="w-5 h-5 text-palette-black dark:text-white" />
-              <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
-                YOUR DEVICES
+              <Laptop className="w-5 h-5 text-primary" />
+              <h3 className="font-heading text-xl font-bold text-on-surface dark:text-white">
+                My Devices
               </h3>
             </div>
             <Link
               href="/devices"
-              className="text-xs font-heading tracking-wider uppercase text-palette-ash hover:text-palette-black dark:hover:text-white flex items-center gap-1"
+              className="font-heading text-xs font-bold text-primary dark:text-primary-fixed uppercase tracking-wider hover:opacity-80 transition-opacity flex items-center gap-1"
             >
-              Manage All ({devices.length}) <ChevronRight className="w-3.5 h-3.5" />
+              View All ({devices.length}) <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -226,59 +222,38 @@ export default function DashboardPage() {
               />
             ))}
           </div>
-
-          {/* AI Security Quick Insight Card */}
-          <NeoCard variant="inset" className="p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-palette-white dark:bg-[#222020] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] flex items-center justify-center flex-shrink-0">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div className="space-y-1 text-xs">
-              <h4 className="font-heading text-base text-palette-black dark:text-white tracking-wide">
-                LOCKPULSE RISK ENGINE
-              </h4>
-              <p className="text-palette-charcoal dark:text-palette-sand font-sans leading-relaxed">
-                Proximity heuristics indicate <strong>MacBook Pro</strong> is currently at Home Office with owner away. Auto-lock timeout is active at 5 minutes.
-              </p>
-              <Link
-                href="/support"
-                className="inline-block text-palette-black dark:text-white font-bold hover:underline mt-1"
-              >
-                Ask AI Security Assistant →
-              </Link>
-            </div>
-          </NeoCard>
         </div>
 
-        {/* Recent Activity Column */}
-        <div className="space-y-5">
-          <div className="flex items-center justify-between">
+        {/* Recent Activity Section */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center px-1">
             <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-palette-black dark:text-white" />
-              <h3 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
-                RECENT ACTIVITY
+              <Activity className="w-5 h-5 text-primary" />
+              <h3 className="font-heading text-xl font-bold text-on-surface dark:text-white">
+                Activity
               </h3>
             </div>
             <Link
               href="/activity"
-              className="text-xs font-heading tracking-wider uppercase text-palette-ash hover:text-palette-black dark:hover:text-white flex items-center gap-1"
+              className="font-heading text-xs font-bold text-primary dark:text-primary-fixed uppercase tracking-wider hover:opacity-80 transition-opacity flex items-center gap-1"
             >
               Full Feed <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <NeoCard variant="raised" className="p-5">
+          <div className="bg-surface dark:bg-[#191b24] rounded-2xl p-5 shadow-neu-raised border border-outline-variant/30">
             <NeoTimeline
-              events={events.slice(0, 4)}
+              events={events.slice(0, 3)}
               onPromptWasThisYou={(evt) => {
                 setActiveWasThisYouEvent(evt);
                 setIsWasThisYouOpen(true);
               }}
             />
-          </NeoCard>
+          </div>
         </div>
       </div>
 
-      {/* "Was This You?" Modal */}
+      {/* "Was This You?" Modal from Stitch */}
       <WasThisYouModal
         isOpen={isWasThisYouOpen}
         onClose={() => setIsWasThisYouOpen(false)}

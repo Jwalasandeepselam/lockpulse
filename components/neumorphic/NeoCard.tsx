@@ -21,22 +21,22 @@ export const NeoCard: React.FC<NeoCardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    raised: 'bg-palette-white dark:bg-[#222020] border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-md',
-    flat: 'bg-palette-white dark:bg-[#222020] border border-palette-sand/70 dark:border-[#3E3B3A] shadow-editorial-sm',
-    inset: 'bg-palette-sand-light/60 dark:bg-[#141313] border border-palette-sand dark:border-[#2F2D2D] shadow-editorial-inset',
-    floating: 'bg-palette-white dark:bg-[#222020] border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-lg',
+    raised: 'bg-surface dark:bg-[#191b24] shadow-neu-raised border border-outline-variant/30 dark:border-[#383a47]',
+    flat: 'bg-surface dark:bg-[#191b24] shadow-neu-raised-sm border border-outline-variant/20 dark:border-[#2d2f3a]',
+    inset: 'bg-surface-container-lowest dark:bg-[#14151d] shadow-neu-recessed border border-outline-variant/20 dark:border-[#282b3a]',
+    floating: 'bg-surface dark:bg-[#191b24] shadow-neu-raised-lg border border-outline-variant/40 dark:border-[#383a47]',
   };
 
   const glowStyles = {
     none: '',
-    secure: 'ring-2 ring-emerald-500/40 shadow-glow-secure',
-    warning: 'ring-2 ring-amber-500/40 shadow-glow-warning',
-    danger: 'ring-2 ring-red-500/50 shadow-glow-danger animate-pulse',
-    accent: 'ring-2 ring-palette-charcoal/30 shadow-glow-accent',
+    secure: 'ring-2 ring-secondary-container/40 glow-emerald',
+    warning: 'ring-2 ring-tertiary-container/40 glow-amber',
+    danger: 'ring-2 ring-error/50 glow-coral animate-pulse',
+    accent: 'ring-2 ring-primary-container/40 glow-cobalt',
   };
 
   const hoverStyles = hoverEffect
-    ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-editorial-hover cursor-pointer'
+    ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-neu-raised-lg cursor-pointer'
     : '';
 
   return (

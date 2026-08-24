@@ -24,31 +24,31 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
   ...props
 }) => {
   const sizeStyles = {
-    sm: 'px-3.5 py-1.5 text-xs font-bold rounded-xl gap-1.5',
-    md: 'px-5 py-2.5 text-sm font-bold rounded-xl gap-2',
+    sm: 'px-3.5 py-1.5 text-xs font-semibold rounded-xl gap-1.5',
+    md: 'px-5 py-2.5 text-sm font-semibold rounded-xl gap-2',
     lg: 'px-6 py-3.5 text-base font-bold rounded-xl gap-2.5',
-    xl: 'px-8 py-4.5 text-lg font-bold rounded-2xl gap-3',
+    xl: 'px-8 py-4 text-lg font-bold rounded-2xl gap-3',
   };
 
   const variantStyles = {
-    // Primary - Deep Obsidian Black with white text
+    // Primary - Electric Cobalt Blue
     primary:
-      'bg-palette-black hover:bg-palette-charcoal dark:bg-palette-white dark:hover:bg-palette-sand dark:text-palette-black text-white shadow-editorial-md hover:shadow-editorial-hover active:scale-[0.98] transition-all tracking-wide uppercase font-heading',
-    // Secondary - Clean Editorial White with sand border
+      'bg-primary hover:bg-[#0035be] dark:bg-primary-container text-white shadow-neu-button hover:opacity-95 active:scale-[0.98] transition-all font-heading tracking-tight',
+    // Secondary - Tactile Surface Neumorphic Raised
     secondary:
-      'bg-palette-white dark:bg-[#2A2828] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#4A4747] shadow-editorial-sm hover:border-palette-ash hover:text-palette-black dark:hover:text-white active:scale-[0.98] font-sans font-semibold',
-    // Danger - High contrast Lockdown Red
+      'bg-surface dark:bg-[#232530] text-primary dark:text-primary-fixed shadow-neu-raised-sm hover:opacity-90 active:scale-[0.98] font-heading border border-outline-variant/30 dark:border-[#383a47]',
+    // Danger - Coral / Crimson Error
     danger:
-      'bg-security-danger hover:bg-security-danger-dark text-white shadow-editorial-md hover:shadow-glow-danger active:scale-[0.98] transition-all tracking-wide uppercase font-heading',
+      'bg-error hover:bg-[#93000a] text-white shadow-[4px_4px_10px_rgba(186,26,26,0.35),-4px_-4px_10px_rgba(255,255,255,0.7)] active:scale-[0.98] transition-all font-heading tracking-tight',
     // Warning - Amber
     warning:
-      'bg-security-warning hover:bg-security-warning-dark text-palette-black font-bold shadow-editorial-md active:scale-[0.98]',
-    // Ghost - Subtle flat
+      'bg-tertiary-container hover:bg-tertiary text-on-tertiary-container font-heading shadow-neu-raised-sm active:scale-[0.98]',
+    // Ghost - Flat
     ghost:
-      'bg-transparent text-palette-ash hover:text-palette-black dark:hover:text-white hover:bg-palette-sand/40 dark:hover:bg-[#2A2828] font-sans font-medium',
-    // Inset - Active state
+      'bg-transparent text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container dark:hover:bg-[#232530] font-sans font-medium',
+    // Inset - Sunken
     inset:
-      'bg-palette-sand-light dark:bg-[#141313] text-palette-black dark:text-white border border-palette-sand shadow-editorial-inset font-bold',
+      'bg-surface-container-low dark:bg-[#14151d] text-primary dark:text-white shadow-neu-recessed font-bold',
   };
 
   return (
@@ -56,7 +56,7 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
       disabled={disabled || isLoading}
       className={twMerge(
         clsx(
-          'inline-flex items-center justify-center transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-palette-charcoal',
+          'inline-flex items-center justify-center transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           sizeStyles[size],
           variantStyles[variant],
           (disabled || isLoading) && 'opacity-60 cursor-not-allowed pointer-events-none',

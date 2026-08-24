@@ -11,43 +11,44 @@ import {
   Bot,
   User,
   Zap,
+  Home,
+  CheckCircle2,
 } from 'lucide-react';
 import { clsx } from 'clsx';
-import { NeoIconButton } from './NeoIconButton';
 
 export const NeoNavigation: React.FC = () => {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: Shield },
+    { name: 'Home', href: '/dashboard', icon: Home },
     { name: 'Devices', href: '/devices', icon: Laptop },
     { name: 'Activity', href: '/activity', icon: Activity },
     { name: 'Security', href: '/security', icon: Lock },
-    { name: 'AI & Support', href: '/support', icon: Bot },
+    { name: 'Profile', href: '/account', icon: User },
   ];
 
   return (
     <>
       {/* Desktop Topbar */}
-      <header className="sticky top-0 z-40 w-full bg-palette-white/90 dark:bg-[#181717]/90 backdrop-blur-md border-b border-palette-sand dark:border-[#3A3837] transition-all">
+      <header className="sticky top-0 z-40 w-full bg-surface/90 dark:bg-[#191b24]/90 backdrop-blur-md border-b border-outline-variant/30 dark:border-[#383a47] transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          {/* Logo */}
+          {/* Brand Logo */}
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-palette-black dark:bg-palette-white text-white dark:text-palette-black flex items-center justify-center font-heading font-extrabold text-xl tracking-tighter transition-transform group-hover:scale-105 shadow-editorial-sm">
+            <div className="w-11 h-11 rounded-2xl bg-primary text-white flex items-center justify-center font-heading font-extrabold text-xl shadow-neu-raised-sm group-hover:scale-105 transition-transform">
               ⚡
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-2xl tracking-wider text-palette-black dark:text-white group-hover:text-palette-ash transition-colors">
-                LOCKPULSE
+              <span className="font-heading font-bold text-2xl tracking-tight text-primary dark:text-primary-fixed group-hover:opacity-90 transition-opacity">
+                LockPulse
               </span>
-              <span className="text-[9px] uppercase font-mono font-bold tracking-widest text-palette-ash">
-                Security Control
+              <span className="text-[10px] font-mono font-medium tracking-widest text-on-surface-variant uppercase">
+                Security Control Hub
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center gap-1.5 bg-palette-canvas dark:bg-[#222020] p-1.5 rounded-2xl border border-palette-sand dark:border-[#3E3B3A]">
+          <nav className="hidden md:flex items-center gap-2 bg-surface-container dark:bg-[#232530] p-1.5 rounded-full shadow-neu-recessed border border-outline-variant/20">
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
               const Icon = item.icon;
@@ -56,13 +57,13 @@ export const NeoNavigation: React.FC = () => {
                   key={item.name}
                   href={item.href}
                   className={clsx(
-                    'flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-semibold transition-all duration-200',
+                    'flex items-center gap-2 px-5 py-2 rounded-full text-xs font-heading font-semibold transition-all duration-200',
                     isActive
-                      ? 'bg-palette-white dark:bg-[#323030] text-palette-black dark:text-white shadow-editorial-sm border border-palette-sand dark:border-[#4A4747]'
-                      : 'text-palette-ash hover:text-palette-black dark:hover:text-white'
+                      ? 'bg-primary text-white shadow-neu-button'
+                      : 'text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed'
                   )}
                 >
-                  <Icon className={clsx('w-4 h-4', isActive ? 'text-palette-black dark:text-white' : 'text-palette-ash')} />
+                  <Icon className="w-4 h-4" />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -72,23 +73,31 @@ export const NeoNavigation: React.FC = () => {
           {/* Right Header Actions */}
           <div className="flex items-center gap-3">
             <Link href="/devices/connect">
-              <button className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-palette-white dark:bg-[#222020] text-xs font-heading tracking-wide uppercase text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A] hover:border-palette-ash shadow-editorial-sm transition-all">
-                <Zap className="w-3.5 h-3.5 text-palette-black dark:text-white" />
+              <button className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface dark:bg-[#232530] text-xs font-heading font-bold text-primary dark:text-primary-fixed shadow-neu-raised-sm hover:opacity-90 transition-all border border-outline-variant/30">
+                <Zap className="w-3.5 h-3.5" />
                 <span>Pair Laptop</span>
               </button>
             </Link>
 
-            <Link href="/account">
-              <NeoIconButton size="sm" variant="raised" aria-label="User Account">
-                <User className="w-4 h-4" />
-              </NeoIconButton>
+            <Link href="/account" className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full shadow-neu-raised bg-surface-container flex items-center justify-center text-primary font-heading font-bold overflow-hidden border border-outline-variant/40">
+                S
+              </div>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-palette-white/95 dark:bg-[#181717]/95 backdrop-blur-lg border-t border-palette-sand dark:border-[#3A3837] py-2.5 px-4 flex items-center justify-around shadow-editorial-lg">
+      {/* Floating AI Assistant FAB Button (from Stitch Design) */}
+      <Link href="/support" aria-label="AI Security Assistant">
+        <div className="fixed bottom-24 right-5 md:right-10 md:bottom-10 w-14 h-14 bg-surface dark:bg-[#232530] rounded-full shadow-neu-raised flex items-center justify-center text-primary dark:text-primary-fixed hover:scale-110 active:shadow-neu-recessed transition-all duration-300 z-40 group cursor-pointer border border-outline-variant/30">
+          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-primary-container/20 blur-md -z-10" />
+          <Bot className="w-6 h-6 text-primary dark:text-primary-fixed" />
+        </div>
+      </Link>
+
+      {/* Floating Neumorphic Bottom Navigation Bar (Stitch Mobile Pill) */}
+      <nav className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50 flex justify-around items-center py-2 px-3 bg-surface-container dark:bg-[#232530] rounded-full shadow-neu-raised border border-outline-variant/30">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
           const Icon = item.icon;
@@ -97,23 +106,13 @@ export const NeoNavigation: React.FC = () => {
               key={item.name}
               href={item.href}
               className={clsx(
-                'flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all duration-200',
+                'flex flex-col items-center justify-center w-11 h-11 rounded-full transition-all duration-200',
                 isActive
-                  ? 'text-palette-black dark:text-white font-bold'
-                  : 'text-palette-ash hover:text-palette-charcoal'
+                  ? 'bg-primary text-white shadow-neu-button scale-105'
+                  : 'text-on-surface-variant hover:text-primary'
               )}
             >
-              <div
-                className={clsx(
-                  'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
-                  isActive
-                    ? 'bg-palette-sand-light dark:bg-[#323030] text-palette-black dark:text-white'
-                    : 'bg-transparent'
-                )}
-              >
-                <Icon className="w-4 h-4" />
-              </div>
-              <span className="text-[10px] font-sans">{item.name}</span>
+              <Icon className="w-5 h-5" />
             </Link>
           );
         })}

@@ -1,90 +1,155 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: #F5F5F5;
-    --foreground: #2C2A29;
-    --card: #FFFFFF;
-    --card-foreground: #222020;
-    --palette-white: #FFFFFF;
-    --palette-sand: #D6D4CE;
-    --palette-ash: #7E7A7A;
-    --palette-charcoal: #4E4B4B;
-    --palette-black: #1E1D1D;
-    --muted: #7E7A7A;
-    --border: #D6D4CE;
-  }
+:root {
+  --background: #fbf8ff;
+  --foreground: #191b24;
 
-  .dark {
-    --background: #181717;
-    --foreground: #F5F5F5;
-    --card: #222020;
-    --card-foreground: #FFFFFF;
-    --palette-white: #FFFFFF;
-    --palette-sand: #3E3B3A;
-    --palette-ash: #9E9A99;
-    --palette-charcoal: #D6D4CE;
-    --palette-black: #0E0D0D;
-    --muted: #9E9A99;
-    --border: #3A3837;
-  }
+  /* Stitch Design System Palette */
+  --color-primary: #0040e0;
+  --color-primary-container: #2e5bff;
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #006c49;
+  --color-secondary-container: #10b981;
+  --color-on-secondary: #ffffff;
+
+  --color-tertiary: #784b00;
+  --color-tertiary-container: #f59e0b;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+
+  --color-surface: #fbf8ff;
+  --color-surface-container: #ededfa;
+  --color-surface-container-low: #f3f2ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e7e7f4;
+  --color-surface-container-highest: #e2e1ef;
+  --color-surface-dim: #d9d9e6;
+
+  --color-on-surface: #191b24;
+  --color-on-surface-variant: #434656;
+  --color-outline: #747688;
+  --color-outline-variant: #c4c5d9;
+
+  /* Neumorphic Shadows (Light Mode) */
+  --neu-shadow-raised: 8px 8px 16px #d9d9e6, -8px -8px 16px #ffffff;
+  --neu-shadow-raised-sm: 4px 4px 8px #d9d9e6, -4px -4px 8px #ffffff;
+  --neu-shadow-raised-lg: 12px 12px 24px #d2d2df, -12px -12px 24px #ffffff;
+  --neu-shadow-recessed: inset 4px 4px 8px #d9d9e6, inset -4px -4px 8px #ffffff;
+  --neu-shadow-recessed-deep: inset 6px 6px 12px #d2d2df, inset -6px -6px 12px #ffffff;
+  --neu-shadow-button: 4px 4px 10px rgba(0, 64, 224, 0.25), -4px -4px 10px rgba(255, 255, 255, 0.7);
+}
+
+.dark {
+  --background: #13141b;
+  --foreground: #f0effd;
+
+  --color-primary: #b8c3ff;
+  --color-primary-container: #2e5bff;
+  --color-on-primary: #001356;
+
+  --color-secondary: #4edea3;
+  --color-secondary-container: #005236;
+  --color-on-secondary: #002113;
+
+  --color-surface: #191b24;
+  --color-surface-container: #232530;
+  --color-surface-container-low: #1e202a;
+  --color-surface-container-lowest: #14151d;
+  --color-surface-container-high: #2d2f3a;
+  --color-surface-container-highest: #383a47;
+  --color-surface-dim: #101118;
+
+  --color-on-surface: #f0effd;
+  --color-on-surface-variant: #c4c5d9;
+  --color-outline: #8e90a2;
+  --color-outline-variant: #434656;
+
+  /* Neumorphic Shadows (Dark Mode) */
+  --neu-shadow-raised: 8px 8px 16px #0c0d12, -8px -8px 16px #242734;
+  --neu-shadow-raised-sm: 4px 4px 8px #0c0d12, -4px -4px 8px #242734;
+  --neu-shadow-raised-lg: 12px 12px 24px #08090d, -12px -12px 24px #2b2e3e;
+  --neu-shadow-recessed: inset 4px 4px 8px #0c0d12, inset -4px -4px 8px #242734;
+  --neu-shadow-recessed-deep: inset 6px 6px 12px #08090d, inset -6px -6px 12px #282b3a;
+  --neu-shadow-button: 4px 4px 10px rgba(0, 0, 0, 0.4), -4px -4px 10px rgba(255, 255, 255, 0.04);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-h1, h2, h3, .font-anton {
-  font-family: 'Anton', 'Epilogue', sans-serif;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+/* Custom Neumorphic utility classes */
+.shadow-neu-raised {
+  box-shadow: var(--neu-shadow-raised);
 }
 
-/* Squarespace Palette Utilities */
-.palette-surface {
-  background: #FFFFFF;
-  border: 1px solid #D6D4CE;
-  box-shadow: 0 4px 20px -2px rgba(44, 42, 41, 0.05), 0 2px 6px -1px rgba(44, 42, 41, 0.03);
+.shadow-neu-raised-sm {
+  box-shadow: var(--neu-shadow-raised-sm);
 }
 
-.dark .palette-surface {
-  background: #222020;
-  border: 1px solid #3E3B3A;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+.shadow-neu-raised-lg {
+  box-shadow: var(--neu-shadow-raised-lg);
 }
 
-.palette-inset {
-  background: #EBE9E3;
-  border: 1px solid #D6D4CE;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+.shadow-neu-recessed {
+  box-shadow: var(--neu-shadow-recessed);
 }
 
-.dark .palette-inset {
-  background: #141313;
-  border: 1px solid #2F2D2D;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+.shadow-neu-recessed-deep {
+  box-shadow: var(--neu-shadow-recessed-deep);
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.shadow-neu-button {
+  box-shadow: var(--neu-shadow-button);
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+.shadow-neu-button:active {
+  box-shadow: var(--neu-shadow-recessed);
+  transform: scale(0.98);
 }
-::-webkit-scrollbar-thumb {
-  background: #D6D4CE;
-  border-radius: 999px;
+
+/* Status LED Glows */
+.glow-emerald {
+  box-shadow: 0 0 12px 2px rgba(16, 185, 129, 0.45);
 }
-.dark ::-webkit-scrollbar-thumb {
-  background: #4E4B4B;
+
+.glow-coral {
+  box-shadow: 0 0 16px 3px rgba(186, 26, 26, 0.5);
+}
+
+.glow-amber {
+  box-shadow: 0 0 14px 2px rgba(245, 158, 11, 0.45);
+}
+
+.glow-cobalt {
+  box-shadow: 0 0 16px 3px rgba(46, 91, 255, 0.45);
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: inset 0 0 10px rgba(16, 185, 129, 0.2), 0 0 15px rgba(16, 185, 129, 0.2);
+  }
+  100% {
+    box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.6), 0 0 35px rgba(16, 185, 129, 0.4);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.95; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

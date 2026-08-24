@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Laptop, Apple, Monitor, Lock, ShieldAlert, Clock, ChevronRight, Wifi, WifiOff } from 'lucide-react';
+import { Apple, Monitor, Lock, ShieldAlert, Clock, ChevronRight, Wifi, WifiOff } from 'lucide-react';
 import { Device } from '@/lib/types';
-import { NeoCard } from './NeoCard';
 import { NeoButton } from './NeoButton';
-import { NeoStatusIndicator } from './NeoStatusIndicator';
 import { NeoModal } from './NeoModal';
 
 interface NeoDeviceCardProps {
@@ -29,7 +27,7 @@ export const NeoDeviceCard: React.FC<NeoDeviceCardProps> = ({
 
   const handleConfirmLock = async () => {
     if (onLockDevice) {
-      setLockStatusMsg('Lock request sent — waiting for confirmation from laptop...');
+      setLockStatusMsg('Signed lock command dispatched to laptop...');
       await onLockDevice(device.id);
       setTimeout(() => {
         setLockStatusMsg(null);
@@ -40,61 +38,80 @@ export const NeoDeviceCard: React.FC<NeoDeviceCardProps> = ({
 
   return (
     <>
-      <NeoCard
-        variant="raised"
-        glow={device.presence_status === 'away' && isOnline ? 'warning' : 'none'}
-        className="relative overflow-hidden flex flex-col justify-between"
-      >
-        <div>
+      <div className="w-full bg-surface dark:bg-[#191b24] rounded-2xl p-6 shadow-neu-raised flex flex-col justify-between border border-outline-variant/30 dark:border-[#383a47] relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+        {/* Top Status Edge Indicator */}
+        <div
+          className={`absolute top-0 left-0 w-full h-[3px] ${
+            isLocked
+              ? 'bg-error'
+              : device.presence_status === 'away'
+              ? 'bg-tertiary-container'
+              : 'bg-secondary'
+          }`}
+        />
+
+        <div className="space-y-4">
           {/* Header Row */}
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] border border-palette-sand dark:border-[#3E3B3A] flex items-center justify-center text-palette-charcoal dark:text-palette-sand">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-full bg-surface dark:bg-[#191b24] shadow-neu-recessed flex items-center justify-center text-primary dark:text-primary-fixed flex-shrink-0">
                 {isMac ? <Apple className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
               </div>
               <div>
-                <h4 className="font-heading text-lg text-palette-black dark:text-white tracking-wide">
+                <h4 className="font-heading text-lg font-bold text-on-surface dark:text-white tracking-tight">
                   {device.device_name}
                 </h4>
-                <p className="text-xs font-sans text-palette-ash">{device.os_name}</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      isLocked
+                        ? 'bg-error glow-coral'
+                        : isOnline
+                        ? 'bg-secondary glow-emerald'
+                        : 'bg-outline'
+                    }`}
+                  />
+                  <span className="font-heading text-[11px] font-bold text-on-surface-variant dark:text-[#c4c5d9] uppercase tracking-wider">
+                    {isLocked
+                      ? 'LOCKED'
+                      : isOnline
+                      ? device.presence_status === 'nearby'
+                        ? 'ONLINE • OWNER NEARBY'
+                        : 'ONLINE • OWNER AWAY'
+                      : 'OFFLINE'}
+                  </span>
+                </div>
               </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-1">
-              <NeoStatusIndicator status={device.status} />
-              <span className="text-[11px] font-medium text-palette-ash flex items-center gap-1">
-                {isOnline ? <Wifi className="w-3 h-3 text-emerald-500" /> : <WifiOff className="w-3 h-3 text-palette-ash" />}
-                {device.presence_status === 'nearby' ? 'Owner nearby' : device.presence_status === 'away' ? 'Owner away' : 'Presence unknown'}
-              </span>
             </div>
           </div>
 
-          {/* Quick Metrics Inset Box */}
-          <div className="bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-xl p-3 border border-palette-sand dark:border-[#3E3B3A] space-y-1.5 mb-5 text-xs text-palette-charcoal dark:text-palette-sand">
+          {/* Recessed Activity Info Box */}
+          <div className="bg-surface-container-lowest dark:bg-[#14151d] p-4 rounded-xl shadow-neu-recessed space-y-1.5 text-xs">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-palette-ash">
-                <Clock className="w-3.5 h-3.5" /> Last Activity
+              <span className="font-mono text-on-surface-variant text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-primary" /> Last Activity
               </span>
-              <span className="font-medium text-palette-black dark:text-white">
+              <span className="font-sans font-semibold text-on-surface dark:text-white">
                 {new Date(device.last_activity).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-palette-ash">Security Agent</span>
-              <span className="font-mono text-[11px] font-bold text-palette-charcoal dark:text-palette-sand">
-                v{device.agent_version} • Ed25519 Verified
+            <div className="flex items-center justify-between pt-1 border-t border-outline-variant/20">
+              <span className="font-mono text-on-surface-variant text-[11px] uppercase tracking-wider">
+                Security Agent
+              </span>
+              <span className="font-mono text-[11px] font-bold text-primary dark:text-primary-fixed">
+                v{device.agent_version} • Ed25519
               </span>
             </div>
           </div>
         </div>
 
         {/* Action Row */}
-        <div className="pt-3 border-t border-palette-sand/60 dark:border-[#3E3B3A] flex items-center justify-between gap-3">
-          <Link
-            href={`/devices/${device.id}`}
-            className="text-xs font-heading uppercase tracking-wide text-palette-ash hover:text-palette-black dark:hover:text-white transition-colors flex items-center gap-1"
-          >
-            View Security <ChevronRight className="w-3.5 h-3.5" />
+        <div className="pt-4 mt-2 flex items-center gap-3">
+          <Link href={`/devices/${device.id}`} className="flex-1">
+            <button className="w-full py-3 rounded-xl bg-primary text-white font-heading font-bold text-xs shadow-neu-button hover:opacity-90 active:scale-[0.98] transition-all tracking-wide uppercase">
+              View Security
+            </button>
           </Link>
 
           <NeoButton
@@ -105,42 +122,37 @@ export const NeoDeviceCard: React.FC<NeoDeviceCardProps> = ({
             onClick={() => setShowLockConfirm(true)}
             leftIcon={<Lock className="w-3.5 h-3.5" />}
           >
-            {isLocked ? 'Locked' : 'Lock Laptop'}
+            {isLocked ? 'Locked' : 'Lock'}
           </NeoButton>
         </div>
-      </NeoCard>
+      </div>
 
-      {/* Remote Lock Confirmation Modal */}
+      {/* Lock Confirmation Modal */}
       <NeoModal
         isOpen={showLockConfirm}
         onClose={() => !isLocking && setShowLockConfirm(false)}
         title={`Lock ${device.device_name}?`}
-        subtitle="Signed Remote Security Command"
+        subtitle="Signed OS Command Execution"
       >
         <div className="space-y-4">
-          <div className="p-4 bg-rose-50 dark:bg-rose-950/30 rounded-xl border border-rose-200 dark:border-rose-900/50 flex items-start gap-3">
-            <ShieldAlert className="w-5 h-5 text-security-danger flex-shrink-0 mt-0.5" />
-            <div className="text-xs text-rose-950 dark:text-rose-200 space-y-1">
-              <p className="font-bold uppercase tracking-wide font-heading">Immediate OS Lockout</p>
-              <p className="font-sans">
-                LockPulse will immediately dispatch a cryptographically signed command requesting{' '}
-                <strong>{device.device_name}</strong> to enter its native operating system lock screen ({isMac ? 'SACLockScreenImmediate' : 'LockWorkStation'}).
+          <div className="p-4 bg-error-container/30 dark:bg-error-container/10 rounded-2xl border border-error/30 flex items-start gap-3">
+            <ShieldAlert className="w-6 h-6 text-error flex-shrink-0 mt-0.5" />
+            <div className="text-xs text-on-surface dark:text-white space-y-1">
+              <p className="font-bold font-heading uppercase text-error">Native Operating System Lockout</p>
+              <p className="font-sans text-on-surface-variant">
+                LockPulse will dispatch a cryptographically signed command triggering{' '}
+                <strong>{device.device_name}</strong> to enter its native lock screen ({isMac ? 'SACLockScreenImmediate' : 'user32!LockWorkStation'}).
               </p>
             </div>
           </div>
 
           {lockStatusMsg ? (
-            <div className="p-3 bg-palette-sand-light dark:bg-[#1E1D1D] rounded-xl text-xs font-bold text-palette-black dark:text-white text-center animate-pulse">
+            <div className="p-3 bg-surface-container rounded-xl text-xs font-bold text-primary text-center shadow-neu-recessed animate-pulse">
               {lockStatusMsg}
             </div>
           ) : (
             <div className="flex items-center justify-end gap-3 pt-2">
-              <NeoButton
-                variant="ghost"
-                size="md"
-                onClick={() => setShowLockConfirm(false)}
-                disabled={isLocking}
-              >
+              <NeoButton variant="ghost" size="md" onClick={() => setShowLockConfirm(false)} disabled={isLocking}>
                 Cancel
               </NeoButton>
               <NeoButton
@@ -150,7 +162,7 @@ export const NeoDeviceCard: React.FC<NeoDeviceCardProps> = ({
                 onClick={handleConfirmLock}
                 leftIcon={<Lock className="w-4 h-4" />}
               >
-                Execute Remote Lock
+                Execute Lock
               </NeoButton>
             </div>
           )}
