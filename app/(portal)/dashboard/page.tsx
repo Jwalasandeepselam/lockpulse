@@ -17,6 +17,7 @@ import {
   Sparkles,
   ArrowRight,
 } from 'lucide-react';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoDeviceCard } from '@/components/neumorphic/NeoDeviceCard';
 import { NeoTimeline } from '@/components/neumorphic/NeoTimeline';
@@ -36,6 +37,7 @@ export default function DashboardPage() {
   const [events, setEvents] = useState<SecurityEvent[]>([]);
   const [lockingDeviceId, setLockingDeviceId] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   // Was This You Modal State
   const [activeWasThisYouEvent, setActiveWasThisYouEvent] = useState<SecurityEvent | null>(null);
@@ -130,14 +132,61 @@ export default function DashboardPage() {
     );
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.03,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.32,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
+
+  const orbVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.38,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
+
   return (
-    <div className="space-y-8 animate-fadeIn pb-12">
+    <motion.div
+      variants={shouldReduceMotion ? undefined : containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8 pb-12"
+    >
       {/* Top Header (Greeting + Quick Pair Action) */}
-      <div className="flex justify-between items-center w-full">
+      <motion.div
+        variants={shouldReduceMotion ? undefined : itemVariants}
+        className="flex justify-between items-center w-full"
+      >
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl shadow-neu-raised-sm bg-primary/10 text-primary dark:text-primary-azure flex items-center justify-center font-heading font-extrabold text-xl border border-primary/20">
+          <motion.div
+            whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            className="w-12 h-12 rounded-2xl shadow-neu-raised-sm bg-primary/10 text-primary dark:text-primary-azure flex items-center justify-center font-heading font-extrabold text-xl border border-primary/20"
+          >
             {profile.full_name?.charAt(0).toUpperCase() || 'U'}
-          </div>
+          </motion.div>
           <div>
             <h1 className="font-heading text-xl sm:text-2xl font-bold text-on-surface dark:text-white">
               {greeting}, {profile.full_name?.split(' ')[0] || 'User'}
@@ -150,16 +199,19 @@ export default function DashboardPage() {
 
         <div className="flex items-center gap-2">
           <Link href="/devices/connect">
-            <button
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-heading font-bold text-primary dark:text-white bg-surface dark:bg-[#16181F] shadow-neu-raised-sm hover:scale-105 transition-all border border-outline-variant dark:border-[#282B38] cursor-pointer"
+            <motion.button
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-heading font-bold text-primary dark:text-white bg-surface dark:bg-[#16181F] shadow-neu-raised-sm border border-outline-variant dark:border-[#282B38] cursor-pointer"
               title="Pair new laptop"
             >
               <Plus className="w-4 h-4 text-primary" />
               <span className="hidden sm:inline">Add Laptop</span>
-            </button>
+            </motion.button>
           </Link>
           <div
-            className={`flex items-center justify-center w-10 h-10 rounded-xl shadow-neu-raised-sm border ${
+            className={`flex items-center justify-center w-10 h-10 rounded-xl shadow-neu-raised-sm border transition-colors ${
               devices.length > 0 && isOverallSecure
                 ? 'bg-secondary/10 text-secondary border-secondary/30'
                 : devices.length === 0
@@ -170,12 +222,17 @@ export default function DashboardPage() {
             <ShieldCheck className="w-5 h-5" />
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Centerpiece: Apple Enclave & Alpine Titanium Security Orb */}
-      <section className="flex flex-col items-center justify-center w-full py-4">
-        <div
-          className={`relative w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-surface dark:bg-[#16181F] shadow-neu-raised flex items-center justify-center border transition-all ${
+      <motion.section
+        variants={shouldReduceMotion ? undefined : orbVariants}
+        className="flex flex-col items-center justify-center w-full py-4"
+      >
+        <motion.div
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
+          transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+          className={`relative w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-surface dark:bg-[#16181F] shadow-neu-raised flex items-center justify-center border transition-all duration-300 ${
             devices.length === 0
               ? 'border-outline-variant/80 dark:border-white/10'
               : isOverallSecure
@@ -196,63 +253,96 @@ export default function DashboardPage() {
               }`}
             />
 
-            {devices.length === 0 ? (
-              <>
-                <Laptop className="w-12 h-12 text-primary mb-2" />
-                <h2 className="font-heading text-xl font-bold text-on-surface dark:text-white tracking-tight z-10">
-                  READY TO PAIR
-                </h2>
-                <p className="font-mono text-[11px] text-on-surface-variant dark:text-titanium-400 mt-1 z-10 uppercase tracking-wider">
-                  0 Laptops Linked
-                </p>
-                <Link href="/devices/connect" className="mt-2.5 z-10">
-                  <span className="text-xs font-heading font-bold text-primary dark:text-primary-azure hover:underline flex items-center gap-1">
-                    Pair Now <ChevronRight className="w-3.5 h-3.5" />
-                  </span>
-                </Link>
-              </>
-            ) : isOverallSecure ? (
-              <>
-                <Shield className="w-12 h-12 text-secondary mb-2" />
-                <h2 className="font-heading text-2xl font-bold text-secondary tracking-tight z-10">
-                  ALL SECURE
-                </h2>
-                <p className="font-mono text-xs text-on-surface-variant dark:text-titanium-400 mt-1 z-10 uppercase tracking-wider">
-                  {devices.length} {devices.length === 1 ? 'device' : 'devices'} protected
-                </p>
-              </>
-            ) : (
-              <>
-                <ShieldAlert className="w-12 h-12 text-error mb-2 animate-bounce" />
-                <h2 className="font-heading text-xl font-bold text-error tracking-tight z-10">
-                  ATTENTION
-                </h2>
-                <p className="font-mono text-[11px] text-error mt-1 z-10 uppercase tracking-wider">
-                  Suspicious unlock
-                </p>
-              </>
-            )}
+            <AnimatePresence mode="wait">
+              {devices.length === 0 ? (
+                <motion.div
+                  key="empty"
+                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.22 }}
+                  className="flex flex-col items-center justify-center text-center w-full z-10"
+                >
+                  <Laptop className="w-12 h-12 text-primary mb-2" />
+                  <h2 className="font-heading text-xl font-bold text-on-surface dark:text-white tracking-tight">
+                    READY TO PAIR
+                  </h2>
+                  <p className="font-mono text-[11px] text-on-surface-variant dark:text-titanium-400 mt-1 uppercase tracking-wider">
+                    0 Laptops Linked
+                  </p>
+                  <Link href="/devices/connect" className="mt-2.5">
+                    <span className="text-xs font-heading font-bold text-primary dark:text-primary-azure hover:underline flex items-center gap-1">
+                      Pair Now <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </Link>
+                </motion.div>
+              ) : isOverallSecure ? (
+                <motion.div
+                  key="secure"
+                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.22 }}
+                  className="flex flex-col items-center justify-center text-center w-full z-10"
+                >
+                  <Shield className="w-12 h-12 text-secondary mb-2" />
+                  <h2 className="font-heading text-2xl font-bold text-secondary tracking-tight">
+                    ALL SECURE
+                  </h2>
+                  <p className="font-mono text-xs text-on-surface-variant dark:text-titanium-400 mt-1 uppercase tracking-wider">
+                    {devices.length} {devices.length === 1 ? 'device' : 'devices'} protected
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="alert"
+                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.22 }}
+                  className="flex flex-col items-center justify-center text-center w-full z-10"
+                >
+                  <ShieldAlert className="w-12 h-12 text-error mb-2 animate-bounce" />
+                  <h2 className="font-heading text-xl font-bold text-error tracking-tight">
+                    ATTENTION
+                  </h2>
+                  <p className="font-mono text-[11px] text-error mt-1 uppercase tracking-wider">
+                    Suspicious unlock
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
 
         {/* Action Banner if Incident Detected */}
         {devices.length > 0 && !isOverallSecure && activeWasThisYouEvent && (
-          <div className="mt-4 animate-scaleUp">
-            <button
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4"
+          >
+            <motion.button
+              whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               onClick={() => setIsWasThisYouOpen(true)}
               className="px-6 py-3 rounded-full bg-error hover:bg-[#D70015] text-white font-heading font-bold text-xs shadow-neu-button flex items-center gap-2 tracking-wide uppercase cursor-pointer"
             >
               <AlertTriangle className="w-4 h-4" />
               <span>Review "Was This You?" Alert</span>
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
-      </section>
+      </motion.section>
 
       {/* Main Content Grid: Devices & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Devices Section */}
-        <div className="lg:col-span-2 space-y-4">
+        <motion.div
+          variants={shouldReduceMotion ? undefined : itemVariants}
+          className="lg:col-span-2 space-y-4"
+        >
           <div className="flex justify-between items-center px-1">
             <div className="flex items-center gap-2">
               <Laptop className="w-5 h-5 text-primary" />
@@ -273,9 +363,13 @@ export default function DashboardPage() {
           {/* Empty State when 0 devices are enrolled */}
           {devices.length === 0 ? (
             <div className="bg-surface dark:bg-[#16181F] rounded-3xl p-8 sm:p-10 shadow-neu-raised border border-outline-variant/80 dark:border-[#282B38] text-center space-y-6">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-azure mx-auto flex items-center justify-center border border-primary/20 shadow-neu-raised-sm">
+              <motion.div
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.08 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                className="w-16 h-16 rounded-2xl bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-azure mx-auto flex items-center justify-center border border-primary/20 shadow-neu-raised-sm"
+              >
                 <Laptop className="w-8 h-8" />
-              </div>
+              </motion.div>
 
               <div className="max-w-md mx-auto space-y-2">
                 <h4 className="font-heading font-extrabold text-xl sm:text-2xl text-on-surface dark:text-white tracking-tight">
@@ -288,32 +382,44 @@ export default function DashboardPage() {
 
               {/* 3 Quick Benefit Pills */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left max-w-lg mx-auto">
-                <div className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl border border-outline-variant/60 dark:border-[#282B38] text-xs">
+                <motion.div
+                  whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl border border-outline-variant/60 dark:border-[#282B38] text-xs"
+                >
                   <span className="font-bold text-on-surface dark:text-white flex items-center gap-1.5 font-heading">
                     <Lock className="w-3.5 h-3.5 text-primary" /> Instant Lock
                   </span>
                   <p className="text-[11px] text-on-surface-variant dark:text-titanium-400 mt-1">
                     Trigger native OS lock screens remotely in &lt;1s.
                   </p>
-                </div>
+                </motion.div>
 
-                <div className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl border border-outline-variant/60 dark:border-[#282B38] text-xs">
+                <motion.div
+                  whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl border border-outline-variant/60 dark:border-[#282B38] text-xs"
+                >
                   <span className="font-bold text-on-surface dark:text-white flex items-center gap-1.5 font-heading">
                     <Radio className="w-3.5 h-3.5 text-secondary" /> Smart Alerts
                   </span>
                   <p className="text-[11px] text-on-surface-variant dark:text-titanium-400 mt-1">
                     Get push alerts when your laptop is unlocked away.
                   </p>
-                </div>
+                </motion.div>
 
-                <div className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl border border-outline-variant/60 dark:border-[#282B38] text-xs">
+                <motion.div
+                  whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl border border-outline-variant/60 dark:border-[#282B38] text-xs"
+                >
                   <span className="font-bold text-on-surface dark:text-white flex items-center gap-1.5 font-heading">
                     <ShieldCheck className="w-3.5 h-3.5 text-secondary" /> Zero Trust
                   </span>
                   <p className="text-[11px] text-on-surface-variant dark:text-titanium-400 mt-1">
                     No passwords or private keys stored in cloud.
                   </p>
-                </div>
+                </motion.div>
               </div>
 
               <div className="pt-2">
@@ -326,20 +432,33 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {devices.map((device) => (
-                <NeoDeviceCard
+              {devices.map((device, idx) => (
+                <motion.div
                   key={device.id}
-                  device={device}
-                  onLockDevice={handleLockDevice}
-                  isLocking={lockingDeviceId === device.id}
-                />
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.28,
+                    delay: idx * 0.05,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <NeoDeviceCard
+                    device={device}
+                    onLockDevice={handleLockDevice}
+                    isLocking={lockingDeviceId === device.id}
+                  />
+                </motion.div>
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Recent Activity Section */}
-        <div className="space-y-4">
+        <motion.div
+          variants={shouldReduceMotion ? undefined : itemVariants}
+          className="space-y-4"
+        >
           <div className="flex justify-between items-center px-1">
             <div className="flex items-center gap-2">
               <Activity className="w-5 h-5 text-primary" />
@@ -378,7 +497,7 @@ export default function DashboardPage() {
               />
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* "Was This You?" Modal */}
@@ -389,6 +508,7 @@ export default function DashboardPage() {
         onConfirmLegitimate={handleConfirmLegitimate}
         onLockdownDevice={handleLockdownDevice}
       />
-    </div>
+    </motion.div>
   );
 }
+

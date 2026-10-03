@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NeoNavigation } from '@/components/neumorphic/NeoNavigation';
+import { PortalTransition } from '@/components/layout/PortalTransition';
 import { isUserAuthenticated, getStoredAuth, initialProfile, setStoredAuth } from '@/lib/store';
 
 export default function PortalLayout({
@@ -52,8 +53,8 @@ export default function PortalLayout({
   return (
     <div className="min-h-screen bg-starlight dark:bg-[#0D0E12] text-foreground flex flex-col pb-20 md:pb-8 selection:bg-primary selection:text-white transition-colors duration-300">
       <NeoNavigation />
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {children}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col">
+        <PortalTransition>{children}</PortalTransition>
       </main>
     </div>
   );

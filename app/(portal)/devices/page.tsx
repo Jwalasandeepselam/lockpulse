@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Laptop, Plus, Search, ArrowRight, ShieldCheck } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoInput } from '@/components/neumorphic/NeoInput';
 import { NeoDeviceCard } from '@/components/neumorphic/NeoDeviceCard';
@@ -14,6 +15,7 @@ export default function DevicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'online' | 'locked'>('all');
   const [lockingDeviceId, setLockingDeviceId] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     setDevices(getStoredDevices());
@@ -59,8 +61,14 @@ export default function DevicesPage() {
     setLockingDeviceId(null);
   };
 
+  const filterButtons: { type: 'all' | 'online' | 'locked'; label: string; activeClass: string }[] = [
+    { type: 'all', label: `All (${devices.length})`, activeClass: 'bg-primary' },
+    { type: 'online', label: 'Online', activeClass: 'bg-secondary' },
+    { type: 'locked', label: 'Locked', activeClass: 'bg-error' },
+  ];
+
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="space-y-6 pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -91,50 +99,60 @@ export default function DevicesPage() {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 self-start sm:self-center">
-          <button
-            onClick={() => setFilterType('all')}
-            className={`px-4 py-1.5 rounded-full text-xs font-heading font-bold uppercase transition-all cursor-pointer ${
-              filterType === 'all'
-                ? 'bg-primary text-white shadow-neu-button'
-                : 'text-on-surface-variant hover:bg-surface-container dark:hover:bg-[#242735]'
-            }`}
-          >
-            All ({devices.length})
-          </button>
-          <button
-            onClick={() => setFilterType('online')}
-            className={`px-4 py-1.5 rounded-full text-xs font-heading font-bold uppercase transition-all cursor-pointer ${
-              filterType === 'online'
-                ? 'bg-secondary text-white shadow-neu-button'
-                : 'text-on-surface-variant hover:bg-surface-container dark:hover:bg-[#242735]'
-            }`}
-          >
-            Online
-          </button>
-          <button
-            onClick={() => setFilterType('locked')}
-            className={`px-4 py-1.5 rounded-full text-xs font-heading font-bold uppercase transition-all cursor-pointer ${
-              filterType === 'locked'
-                ? 'bg-error text-white shadow-neu-button'
-                : 'text-on-surface-variant hover:bg-surface-container dark:hover:bg-[#242735]'
-            }`}
-          >
-            Locked
-          </button>
+        <div className="flex items-center gap-2 self-start sm:self-center bg-surface-container/60 dark:bg-[#12131A] p-1 rounded-full border border-outline-variant/40 dark:border-white/5">
+          {filterButtons.map((btn) => {
+            const isBtnActive = filterType === btn.type;
+            return (
+              <motion.button
+                key={btn.type}
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.04 }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                onClick={() => setFilterType(btn.type)}
+                className={`relative px-4 py-1.5 rounded-full text-xs font-heading font-bold uppercase transition-colors cursor-pointer ${
+                  isBtnActive
+                    ? 'text-white'
+                    : 'text-on-surface-variant hover:text-on-surface dark:text-titanium-300 dark:hover:text-white'
+                }`}
+              >
+                <span className="relative z-10">{btn.label}</span>
+                {isBtnActive && (
+                  <motion.div
+                    layoutId="active-device-filter"
+                    className={`absolute inset-0 rounded-full shadow-neu-button ${btn.activeClass}`}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { type: 'spring', stiffness: 400, damping: 30 }
+                    }
+                  />
+                )}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
       {/* Device Cards Grid */}
       {devices.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDevices.map((device) => (
-            <NeoDeviceCard
+          {filteredDevices.map((device, idx) => (
+            <motion.div
               key={device.id}
-              device={device}
-              onLockDevice={handleLockDevice}
-              isLocking={lockingDeviceId === device.id}
-            />
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.28,
+                delay: idx * 0.05,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <NeoDeviceCard
+                device={device}
+                onLockDevice={handleLockDevice}
+                isLocking={lockingDeviceId === device.id}
+              />
+            </motion.div>
           ))}
         </div>
       ) : (
