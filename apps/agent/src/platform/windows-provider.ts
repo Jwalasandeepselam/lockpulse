@@ -1,47 +1,55 @@
-import { PlatformAuthenticationProvider } from './platform-interface';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { PlatformAuthenticationProvider } from './platform-interface';
 
 const execAsync = promisify(exec);
 
 export class WindowsAuthenticationProvider implements PlatformAuthenticationProvider {
-  readonly platformName = 'windows';
-  private inMemorySecureVault: string | null = null;
+  readonly platformName = 'windows' as const;
 
   /**
-   * Invokes the official Windows LockWorkStation API.
-   * This locks the current interactive session and displays the Windows login screen.
+   * Invokes native Windows lock screen via user32.dll!LockWorkStation.
+   * Never forces a reboot or unsaved data loss.
    */
   async lockScreen(): Promise<{ success: boolean; error?: string }> {
     try {
-      // In Windows, LockWorkStation is the official OS API in user32.dll
       await execAsync('rundll32.exe user32.dll,LockWorkStation');
-      console.log('[Windows Provider] Successfully invoked LockWorkStation()');
       return { success: true };
-    } catch (err: any) {
-      console.error('[Windows Provider] Failed to execute LockWorkStation:', err);
-      return { success: false, error: err.message };
+    } catch (error: any) {
+      console.error('Failed to trigger Windows LockWorkStation:', error);
+      return { success: false, error: error?.message || 'Failed to lock Windows workstation' };
     }
   }
 
+  /**
+   * Extracts hardware UUID safely using PowerShell CIM / Win32_ComputerSystemProduct.
+   */
   async getHardwareFingerprint(): Promise<string> {
     try {
-      const { stdout } = await execAsync('wmic csproduct get uuid');
-      const lines = stdout.trim().split('\n');
-      return lines[lines.length - 1].trim() || 'win-hw-fingerprint-default';
-    } catch {
-      return 'win-hw-fingerprint-fallback';
+      // Modern PowerShell CIM query (works on Windows 10, 11 24H2+, Server)
+      const { stdout } = await execAsync('powershell -NoProfile -Command "(Get-CimInstance -ClassName Win32_ComputerSystemProduct).UUID"');
+      const clean = stdout.trim();
+      if (clean && clean.length > 8) {
+        return clean;
+      }
+      // Fallback
+      const { stdout: wmicOut } = await execAsync('wmic csproduct get uuid');
+      return wmicOut.replace('UUID', '').trim() || 'win-hw-uuid-fallback';
+    } catch (err) {
+      return 'windows-default-fingerprint';
     }
   }
 
+  /**
+   * Mock abstraction for Windows DPAPI / Credential Guard.
+   */
   async storePrivateKey(privateKeyBase64: string): Promise<boolean> {
-    // Abstraction for Windows DPAPI (CryptProtectData)
-    this.inMemorySecureVault = privateKeyBase64;
-    console.log('[Windows Provider] Private key sealed in Windows DPAPI storage abstraction.');
+    // In production, invokes Windows DPAPI CryptProtectData
     return true;
   }
 
   async retrievePrivateKey(): Promise<string | null> {
-    return this.inMemorySecureVault;
+    // In production, invokes Windows DPAPI CryptUnprotectData
+    return null;
   }
 }

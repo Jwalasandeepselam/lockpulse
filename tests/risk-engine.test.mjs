@@ -1,64 +1,97 @@
 import assert from 'assert';
+import test from 'node:test';
 
-function evaluateRisk(context) {
-  const reasons = [];
+function evaluateRisk(input) {
+  const { eventType, presenceStatus, metadata, context = {} } = input;
   const hour = context.hourOfDay ?? new Date().getHours();
-  const isUnusualHour = hour < 6 || hour >= 23;
+  const isLateNight = hour >= 23 || hour <= 5;
+  const isKnownNetwork = context.isKnownNetwork ?? true;
 
-  if (context.presenceStatus === 'nearby') {
-    if (context.eventType === 'unlock' || context.eventType === 'wake' || context.eventType === 'lock') {
+  if (eventType === 'unlock') {
+    if (presenceStatus === 'away') {
       return {
-        score: 'LOW',
-        reasons: ['Owner phone verified nearby via local proximity signal'],
-        recommendedAction: 'none',
+        score: 'HIGH',
+        reason: 'Laptop unlocked while registered companion phone appears away from device area.',
+        requiresImmediateAlert: true,
+        recommendedAction: 'send_was_this_you',
       };
     }
-  }
-
-  if (context.eventType === 'login_fail' || (context.failedAttemptsCount && context.failedAttemptsCount > 0)) {
-    reasons.push(`Failed login attempt detected`);
-    if (context.presenceStatus === 'away') {
-      reasons.push('Owner phone is currently away');
-      return { score: 'HIGH', reasons, recommendedAction: 'immediate_lock' };
+    if (presenceStatus === 'unknown') {
+      return {
+        score: isLateNight ? 'MEDIUM' : 'LOW',
+        reason: isLateNight
+          ? 'Device unlocked during late-night hours without confirmed companion phone proximity.'
+          : 'Unlock event recorded with companion proximity undetermined.',
+        requiresImmediateAlert: isLateNight,
+        recommendedAction: isLateNight ? 'send_was_this_you' : 'none',
+      };
     }
-    return { score: 'MEDIUM', reasons, recommendedAction: 'verify_identity' };
+    return {
+      score: 'LOW',
+      reason: 'Legitimate unlock with confirmed owner companion proximity nearby.',
+      requiresImmediateAlert: false,
+      recommendedAction: 'none',
+    };
   }
 
-  if (context.eventType === 'unlock' && context.presenceStatus === 'away') {
-    reasons.push('Laptop was unlocked while registered phone appears to be away');
-    if (isUnusualHour) {
-      reasons.push(`Activity occurred at unusual hour (${hour}:00)`);
-      return { score: 'HIGH', reasons, recommendedAction: 'prompt_was_this_you' };
+  if (eventType === 'failed_login') {
+    const attempts = metadata?.consecutive_attempts ?? 1;
+    if (attempts >= 3) {
+      return {
+        score: 'HIGH',
+        reason: `Multiple consecutive failed authentication attempts (${attempts}) detected.`,
+        requiresImmediateAlert: true,
+        recommendedAction: 'send_security_alert',
+      };
     }
-    return { score: 'MEDIUM', reasons, recommendedAction: 'prompt_was_this_you' };
+    return {
+      score: 'MEDIUM',
+      reason: 'Single failed authentication attempt recorded.',
+      requiresImmediateAlert: false,
+      recommendedAction: 'none',
+    };
   }
 
-  if (context.eventType === 'lock' || context.eventType === 'sleep' || context.eventType === 'remote_lock_ack') {
-    return { score: 'LOW', reasons: ['Device entered secure locked / sleep state'], recommendedAction: 'none' };
-  }
-
-  return { score: 'UNKNOWN', reasons: ['Default baseline'], recommendedAction: 'none' };
+  return {
+    score: 'LOW',
+    reason: 'Standard device operational telemetry event.',
+    requiresImmediateAlert: false,
+    recommendedAction: 'none',
+  };
 }
 
-console.log('Running LockPulse Deterministic Risk Engine Tests...');
+test('Risk Engine: Away + Unlock triggers HIGH risk', () => {
+  const result = evaluateRisk({
+    eventType: 'unlock',
+    presenceStatus: 'away',
+  });
+  assert.strictEqual(result.score, 'HIGH');
+  assert.strictEqual(result.requiresImmediateAlert, true);
+  assert.strictEqual(result.recommendedAction, 'send_was_this_you');
+});
 
-// Test 1: Routine unlock with owner nearby
-const test1 = evaluateRisk({ eventType: 'unlock', presenceStatus: 'nearby' });
-assert.strictEqual(test1.score, 'LOW', 'Owner nearby during unlock must be LOW risk');
+test('Risk Engine: Nearby + Unlock produces LOW risk', () => {
+  const result = evaluateRisk({
+    eventType: 'unlock',
+    presenceStatus: 'nearby',
+  });
+  assert.strictEqual(result.score, 'LOW');
+  assert.strictEqual(result.requiresImmediateAlert, false);
+});
 
-// Test 2: Unlock while owner is away during daytime
-const test2 = evaluateRisk({ eventType: 'unlock', presenceStatus: 'away', hourOfDay: 14 });
-assert.strictEqual(test2.score, 'MEDIUM', 'Unlock while away must trigger MEDIUM risk');
-assert.strictEqual(test2.recommendedAction, 'prompt_was_this_you', 'Must recommend prompt_was_this_you');
+test('Risk Engine: Failed Login escalation', () => {
+  const single = evaluateRisk({
+    eventType: 'failed_login',
+    presenceStatus: 'nearby',
+    metadata: { consecutive_attempts: 1 },
+  });
+  assert.strictEqual(single.score, 'MEDIUM');
 
-// Test 3: Unlock while owner is away at 2 AM (Unusual hour)
-const test3 = evaluateRisk({ eventType: 'unlock', presenceStatus: 'away', hourOfDay: 2 });
-assert.strictEqual(test3.score, 'HIGH', 'Unlock while away at 2 AM must trigger HIGH risk');
-assert.strictEqual(test3.recommendedAction, 'prompt_was_this_you', 'Must recommend prompt_was_this_you');
-
-// Test 4: Failed login attempt while away
-const test4 = evaluateRisk({ eventType: 'login_fail', presenceStatus: 'away' });
-assert.strictEqual(test4.score, 'HIGH', 'Failed login while away must be HIGH risk');
-assert.strictEqual(test4.recommendedAction, 'immediate_lock', 'Must recommend immediate_lock');
-
-console.log('✓ All Risk Engine heuristic tests passed successfully!');
+  const multiple = evaluateRisk({
+    eventType: 'failed_login',
+    presenceStatus: 'nearby',
+    metadata: { consecutive_attempts: 3 },
+  });
+  assert.strictEqual(multiple.score, 'HIGH');
+  assert.strictEqual(multiple.requiresImmediateAlert, true);
+});

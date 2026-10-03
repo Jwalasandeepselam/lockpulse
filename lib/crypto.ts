@@ -1,107 +1,130 @@
 import nacl from 'tweetnacl';
+import { Buffer } from 'buffer';
 
 /**
- * Utility functions for cryptographic operations in LockPulse
- * - Local Ed25519 key generation (stored on device)
- * - Message signing & signature verification
- * - Monotonic nonce validation with TTL replay protection
+ * KeyPair result containing base64-encoded Ed25519 public and secret keys.
  */
-
-// Helper to encode Uint8Array to base64
-export function uint8ArrayToBase64(bytes: Uint8Array): string {
-  let binary = '';
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  if (typeof window !== 'undefined') {
-    return window.btoa(binary);
-  }
-  return Buffer.from(bytes).toString('base64');
-}
-
-// Helper to decode base64 to Uint8Array
-export function base64ToUint8Array(base64: string): Uint8Array {
-  if (typeof window !== 'undefined') {
-    const binary = window.atob(base64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-    return bytes;
-  }
-  return new Uint8Array(Buffer.from(base64, 'base64'));
+export interface Ed25519KeyPair {
+  publicKey: string;
+  secretKey: string;
 }
 
 /**
- * Generates an Ed25519 cryptographic keypair locally.
- * In a real laptop agent, the secret key is preserved in OS Protected Storage (DPAPI/Keychain).
+ * Deterministically sorts object keys recursively (RFC 8785 JSON Canonicalization).
+ * Guarantees that stringified payloads are identical across different JS engines and platforms.
  */
-export function generateDeviceKeyPair(): {
-  publicKeyBase64: string;
-  secretKeyBase64: string;
-} {
+export function canonicalJsonStringify(obj: any): string {
+  if (obj === null || typeof obj !== 'object') {
+    return JSON.stringify(obj);
+  }
+
+  if (Array.isArray(obj)) {
+    return '[' + obj.map((item) => canonicalJsonStringify(item)).join(',') + ']';
+  }
+
+  const sortedKeys = Object.keys(obj).sort();
+  const keyValues = sortedKeys.map(
+    (key) => `${JSON.stringify(key)}:${canonicalJsonStringify(obj[key])}`
+  );
+  return '{' + keyValues.join(',') + '}';
+}
+
+/**
+ * Generates an Ed25519 cryptographic keypair locally on the client or laptop agent.
+ * The secretKey MUST never leave the local device.
+ */
+export function generateDeviceKeyPair(): Ed25519KeyPair {
   const keyPair = nacl.sign.keyPair();
   return {
-    publicKeyBase64: uint8ArrayToBase64(keyPair.publicKey),
-    secretKeyBase64: uint8ArrayToBase64(keyPair.secretKey),
+    publicKey: Buffer.from(keyPair.publicKey).toString('base64'),
+    secretKey: Buffer.from(keyPair.secretKey).toString('base64'),
   };
 }
 
 /**
- * Signs a payload string with the device's private key.
+ * Signs an arbitrary string or object payload using the device's Ed25519 secret key.
+ * Produces a detached base64 signature.
  */
-export function signPayload(payloadStr: string, secretKeyBase64: string): string {
+export function signPayload(payload: string | object, secretKeyBase64: string): string {
+  const secretKey = Buffer.from(secretKeyBase64, 'base64');
+  const payloadStr = typeof payload === 'string' ? payload : canonicalJsonStringify(payload);
   const messageBytes = new TextEncoder().encode(payloadStr);
-  const secretKeyBytes = base64ToUint8Array(secretKeyBase64);
-  const signature = nacl.sign.detached(messageBytes, secretKeyBytes);
-  return uint8ArrayToBase64(signature);
+  const signatureBytes = nacl.sign.detached(messageBytes, secretKey);
+  return Buffer.from(signatureBytes).toString('base64');
 }
 
 /**
- * Verifies that a signed payload originated from the device holding the corresponding public key.
+ * Verifies a detached Ed25519 signature against a given payload and public key.
  */
 export function verifySignature(
-  payloadStr: string,
+  payload: string | object,
   signatureBase64: string,
   publicKeyBase64: string
 ): boolean {
   try {
+    const signature = Buffer.from(signatureBase64, 'base64');
+    const publicKey = Buffer.from(publicKeyBase64, 'base64');
+    const payloadStr = typeof payload === 'string' ? payload : canonicalJsonStringify(payload);
     const messageBytes = new TextEncoder().encode(payloadStr);
-    const signatureBytes = base64ToUint8Array(signatureBase64);
-    const publicKeyBytes = base64ToUint8Array(publicKeyBase64);
-    return nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
+    return nacl.sign.detached.verify(messageBytes, signature, publicKey);
   } catch (err) {
-    console.error('Signature verification error:', err);
     return false;
   }
 }
 
 /**
- * Generates a cryptographically secure random nonce with timestamp.
- * Format: `<timestamp_ms>-<random_hex_32>`
+ * Generates a high-entropy monotonic nonce containing timestamp + random bytes.
+ * Format: `<timestamp_ms>-<hex_entropy>`
  */
 export function generateCommandNonce(): string {
+  const timestamp = Date.now();
   const randomBytes = nacl.randomBytes(16);
-  const hex = Array.from(randomBytes)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-  return `${Date.now()}-${hex}`;
+  const randomHex = Buffer.from(randomBytes).toString('hex');
+  return `${timestamp}-${randomHex}`;
 }
 
 /**
- * Validates whether a command nonce is within acceptable time drift (default: 30 seconds).
+ * Validates whether a given nonce falls within the allowed sliding time window (30s TTL).
  */
-export function isNonceValid(nonce: string, maxAgeMs: number = 30000): boolean {
+export function isNonceValid(nonce: string, maxAgeMs = 30000): boolean {
+  if (!nonce || typeof nonce !== 'string') return false;
   const parts = nonce.split('-');
   if (parts.length < 2) return false;
+
   const timestamp = parseInt(parts[0], 10);
   if (isNaN(timestamp)) return false;
 
   const now = Date.now();
-  // Ensure timestamp is not in the distant future (>5s) and not older than maxAgeMs
-  if (timestamp > now + 5000) return false;
+  // Ensure timestamp is not older than maxAgeMs and not more than 5 seconds in the future
   if (now - timestamp > maxAgeMs) return false;
+  if (timestamp - now > 5000) return false;
+
+  return true;
+}
+
+/**
+ * In-memory sliding-window cache for consumed nonces to prevent replay attacks on the agent/server.
+ */
+const consumedNonces = new Map<string, number>();
+
+/**
+ * Checks and records a nonce as consumed.
+ * Rejects nonces that have already been executed or are out of the TTL window.
+ */
+export function consumeNonce(nonce: string, maxAgeMs = 30000): boolean {
+  if (!isNonceValid(nonce, maxAgeMs)) return false;
+  if (consumedNonces.has(nonce)) return false; // Replay attempt detected
+
+  const now = Date.now();
+  consumedNonces.set(nonce, now);
+
+  // Evict expired nonces to maintain bounded memory
+  const cutoff = now - maxAgeMs;
+  for (const [key, timestamp] of consumedNonces.entries()) {
+    if (timestamp < cutoff) {
+      consumedNonces.delete(key);
+    }
+  }
 
   return true;
 }

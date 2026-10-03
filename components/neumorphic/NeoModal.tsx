@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { clsx } from 'clsx';
 import { NeoIconButton } from './NeoIconButton';
-import { NeoCard } from './NeoCard';
 
 interface NeoModalProps {
   isOpen: boolean;
@@ -23,9 +22,13 @@ export const NeoModal: React.FC<NeoModalProps> = ({
   children,
   maxWidth = 'md',
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
     };
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -46,34 +49,60 @@ export const NeoModal: React.FC<NeoModalProps> = ({
     xl: 'max-w-xl',
   };
 
-  const modalContent = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby={subtitle ? 'modal-subtitle' : undefined}
+    >
       {/* Backdrop */}
       <div
+        className="fixed inset-0 bg-inverse-surface/40 backdrop-blur-md transition-opacity animate-fadeIn"
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity duration-300 animate-fadeIn"
+        aria-hidden="true"
       />
 
-      {/* Modal Dialog Card */}
-      <div className={`relative w-full ${maxWidthStyles[maxWidth]} z-10 animate-scaleUp`}>
-        <NeoCard variant="floating" className="p-6 md:p-8 bg-surface-card dark:bg-surface-darkcard border border-white/80 dark:border-white/10">
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div>
-              <h3 className="font-heading font-bold text-xl text-slate-900 dark:text-white tracking-tight">
-                {title}
-              </h3>
-              {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{subtitle}</p>}
-            </div>
-            <NeoIconButton size="sm" variant="flat" onClick={onClose} aria-label="Close dialog">
-              <X className="w-4 h-4" />
-            </NeoIconButton>
+      {/* Modal Box */}
+      <div
+        ref={modalRef}
+        className={clsx(
+          'relative z-10 w-full bg-surface dark:bg-[#191b24] rounded-[2rem] p-6 sm:p-8 shadow-neu-raised-lg border border-outline-variant/30 animate-scaleUp',
+          maxWidthStyles[maxWidth]
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 mb-6 pb-3 border-b border-outline-variant/20">
+          <div>
+            <h3
+              id="modal-title"
+              className="font-heading font-bold text-xl sm:text-2xl text-on-surface dark:text-white tracking-tight"
+            >
+              {title}
+            </h3>
+            {subtitle && (
+              <p
+                id="modal-subtitle"
+                className="font-sans text-xs text-on-surface-variant dark:text-[#c4c5d9] mt-0.5"
+              >
+                {subtitle}
+              </p>
+            )}
           </div>
+          <NeoIconButton
+            size="sm"
+            variant="flat"
+            aria-label="Close dialog"
+            onClick={onClose}
+          >
+            <X className="w-4 h-4" />
+          </NeoIconButton>
+        </div>
 
-          <div className="space-y-4">{children}</div>
-        </NeoCard>
+        {/* Content Body */}
+        <div className="text-on-surface dark:text-white">{children}</div>
       </div>
     </div>
   );
-
-  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null;
 };

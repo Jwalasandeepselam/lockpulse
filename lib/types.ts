@@ -44,6 +44,7 @@ export interface Device {
   os_name: string;
   os_version: string;
   agent_version: string;
+  hardware_fingerprint?: string;
   status: DeviceStatus;
   presence_status: PresenceStatus;
   last_seen: string;
@@ -58,7 +59,7 @@ export interface DeviceKeyMetadata {
   device_id: string;
   public_key: string; // Ed25519 Base64
   key_algorithm: string;
-  hardware_fingerprint: string;
+  hardware_backed: boolean;
   created_at: string;
 }
 
@@ -72,24 +73,24 @@ export interface SecurityEvent {
   title: string;
   description: string;
   risk_score: RiskScore;
-  metadata: Record<string, any>;
+  metadata?: Record<string, any>;
   is_resolved: boolean;
-  resolution_action?: 'confirmed_legitimate' | 'remote_locked' | 'marked_stolen';
+  resolution_action?: 'confirmed_legitimate' | 'remote_locked' | 'escalated';
+  resolved_at?: string;
   created_at: string;
 }
 
 export interface DeviceCommand {
   id: string;
-  user_id: string;
   device_id: string;
   command_type: CommandType;
   payload: Record<string, any>;
-  nonce: string;
+  signature: string; // Ed25519 Detached Base64 Signature
+  nonce: string; // 30-sec TTL nonce
   status: CommandStatus;
   expires_at: string;
-  executed_at?: string;
-  error_message?: string;
   created_at: string;
+  executed_at?: string;
 }
 
 export interface NotificationPreferences {
@@ -97,8 +98,8 @@ export interface NotificationPreferences {
   email_alerts: boolean;
   push_alerts: boolean;
   notify_on_unlock_away: boolean;
-  notify_on_new_device: boolean;
   notify_on_failed_login: boolean;
+  notify_on_remote_lock: boolean;
   updated_at: string;
 }
 
@@ -106,11 +107,11 @@ export interface SupportTicket {
   id: string;
   user_id: string;
   device_id?: string;
+  category: 'general' | 'pairing' | 'remote_lock' | 'security_alert';
   subject: string;
   description: string;
-  category: 'pairing' | 'remote_lock' | 'security_alert' | 'general';
-  status: 'open' | 'in_progress' | 'resolved';
-  diagnostics_payload?: Record<string, any>;
+  diagnostics_payload: Record<string, any>;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
   created_at: string;
 }
 
@@ -126,15 +127,11 @@ export interface AIConversationMessage {
 export interface RiskEvaluationResult {
   score: RiskScore;
   reasons: string[];
-  recommendedAction?: 'none' | 'prompt_was_this_you' | 'immediate_lock' | 'verify_identity';
-}
-
-export interface PairingChallenge {
-  challenge_code: string;
-  device_name: string;
-  device_type: DeviceType;
-  os_name: string;
-  public_key: string;
-  hardware_fingerprint: string;
-  expires_at: string;
+  recommendedAction:
+    | 'none'
+    | 'immediate_lock'
+    | 'verify_identity'
+    | 'prompt_was_this_you'
+    | 'send_security_alert'
+    | 'auto_lock';
 }
