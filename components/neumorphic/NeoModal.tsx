@@ -51,29 +51,29 @@ export const NeoModal: React.FC<NeoModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
       aria-describedby={subtitle ? 'modal-subtitle' : undefined}
     >
-      {/* Backdrop */}
+      {/* Deep Frosted Backdrop */}
       <div
-        className="fixed inset-0 bg-inverse-surface/40 backdrop-blur-md transition-opacity animate-fadeIn"
+        className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md transition-opacity animate-fadeIn"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Box */}
+      {/* Alpine Titanium / Glass Modal Container */}
       <div
         ref={modalRef}
         className={clsx(
-          'relative z-10 w-full bg-surface dark:bg-[#191b24] rounded-[2rem] p-6 sm:p-8 shadow-neu-raised-lg border border-outline-variant/30 animate-scaleUp',
+          'relative z-10 w-full bg-surface dark:bg-[#16181F] rounded-[1.75rem] p-6 sm:p-8 shadow-2xl border border-outline-variant/80 dark:border-white/10 animate-scaleUp',
           maxWidthStyles[maxWidth]
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-6 pb-3 border-b border-outline-variant/20">
+        <div className="flex items-start justify-between gap-4 mb-5 pb-3.5 border-b border-outline-variant/40 dark:border-white/10">
           <div>
             <h3
               id="modal-title"
@@ -84,7 +84,7 @@ export const NeoModal: React.FC<NeoModalProps> = ({
             {subtitle && (
               <p
                 id="modal-subtitle"
-                className="font-sans text-xs text-on-surface-variant dark:text-[#c4c5d9] mt-0.5"
+                className="font-sans text-xs text-on-surface-variant dark:text-titanium-400 mt-0.5"
               >
                 {subtitle}
               </p>
@@ -96,12 +96,12 @@ export const NeoModal: React.FC<NeoModalProps> = ({
             aria-label="Close dialog"
             onClick={onClose}
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-on-surface dark:text-white" />
           </NeoIconButton>
         </div>
 
         {/* Content Body */}
-        <div className="text-on-surface dark:text-white">{children}</div>
+        <div className="text-on-surface dark:text-white font-sans">{children}</div>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
       case 'suspicious_unlock':
         return <ShieldAlert className="w-4 h-4 text-error" />;
       case 'unlock':
-        return <Unlock className="w-4 h-4 text-tertiary-container" />;
+        return <Unlock className="w-4 h-4 text-tertiary" />;
       case 'lock':
       case 'remote_lock_ack':
         return <Lock className="w-4 h-4 text-secondary" />;
@@ -44,13 +44,21 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
         return severity === 'high' ? (
           <AlertTriangle className="w-4 h-4 text-error" />
         ) : (
-          <ShieldCheck className="w-4 h-4 text-on-surface-variant" />
+          <ShieldCheck className="w-4 h-4 text-secondary" />
         );
     }
   };
 
+  if (!events || events.length === 0) {
+    return (
+      <div className="py-8 text-center text-xs font-sans text-on-surface-variant dark:text-titanium-400">
+        No recorded security events.
+      </div>
+    );
+  }
+
   return (
-    <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-outline-variant/40 dark:before:bg-[#383a47]">
+    <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-outline-variant dark:before:bg-[#282B38]">
       {events.map((evt) => {
         const isSuspicious = evt.event_type === 'suspicious_unlock' && !evt.is_resolved;
         const timeStr = new Date(evt.created_at).toLocaleTimeString([], {
@@ -61,27 +69,27 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
         return (
           <div key={evt.id} className="relative group">
             {/* Node Icon */}
-            <div className="absolute -left-6 top-1 w-6 h-6 rounded-full bg-surface dark:bg-[#191b24] shadow-neu-raised-sm flex items-center justify-center z-10 border border-outline-variant/30">
+            <div className="absolute -left-6 top-1 w-6 h-6 rounded-full bg-surface dark:bg-[#16181F] shadow-neu-raised-sm flex items-center justify-center z-10 border border-outline-variant/60 dark:border-[#282B38]">
               {getEventIcon(evt.event_type, evt.severity)}
             </div>
 
             <div
-              className={`bg-surface dark:bg-[#191b24] p-4 rounded-2xl border transition-all duration-200 ${
+              className={`bg-surface dark:bg-[#16181F] p-4 rounded-2xl border transition-all duration-200 ${
                 isSuspicious
-                  ? 'border-error shadow-neu-raised ring-2 ring-error/40 glow-coral'
-                  : 'border-outline-variant/30 shadow-neu-raised-sm hover:border-primary/50'
+                  ? 'border-error shadow-neu-raised ring-2 ring-error/30 glow-coral'
+                  : 'border-outline-variant/60 dark:border-[#282B38] shadow-neu-raised-sm hover:border-primary/50'
               }`}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-mono text-xs font-bold text-on-surface-variant">
+                  <span className="font-mono text-xs font-bold text-on-surface-variant dark:text-titanium-400">
                     {timeStr}
                   </span>
-                  <h5 className="font-heading font-bold text-base text-on-surface dark:text-white">
+                  <h5 className="font-heading font-bold text-sm sm:text-base text-on-surface dark:text-white">
                     {evt.title}
                   </h5>
                   {evt.device_name && (
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-surface-container dark:bg-[#14151d] text-primary dark:text-primary-fixed font-bold border border-outline-variant/30">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-surface-container dark:bg-[#242735] text-primary dark:text-white font-bold border border-outline-variant/40">
                       {evt.device_name}
                     </span>
                   )}
@@ -92,7 +100,7 @@ export const NeoTimeline: React.FC<NeoTimelineProps> = ({
                 </div>
               </div>
 
-              <p className="text-xs font-sans text-on-surface-variant dark:text-[#c4c5d9] mb-2 leading-relaxed">
+              <p className="text-xs font-sans text-on-surface-variant dark:text-titanium-300 mb-2 leading-relaxed">
                 {evt.description}
               </p>
 

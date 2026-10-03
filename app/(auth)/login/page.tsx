@@ -3,86 +3,167 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { Mail, Lock, ArrowRight, AlertCircle, ShieldCheck } from 'lucide-react';
 import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoInput } from '@/components/neumorphic/NeoInput';
+import { setStoredAuth, getStoredProfile } from '@/lib/store';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('sandeep@example.com');
-  const [password, setPassword] = useState('••••••••••••');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [authError, setAuthError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validateForm = () => {
+    let isValid = true;
+    setEmailError('');
+    setPasswordError('');
+    setAuthError('');
+
+    if (!email.trim()) {
+      setEmailError('Email address is required.');
+      isValid = false;
+    } else if (!emailRegex.test(email.trim())) {
+      setEmailError('Please enter a valid email address (e.g. name@domain.com).');
+      isValid = false;
+    }
+
+    if (!password) {
+      setPasswordError('Password is required.');
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters.');
+      isValid = false;
+    }
+
+    return isValid;
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage('');
+    if (!validateForm()) return;
 
+    setIsLoading(true);
+    setAuthError('');
+
+    // Simulate authentication check
     await new Promise((resolve) => setTimeout(resolve, 800));
+
+    // Valid credentials check simulation
+    if (email.toLowerCase().includes('fail') || email.toLowerCase().includes('invalid')) {
+      setAuthError('Invalid credentials. Please verify your email and password.');
+      setIsLoading(false);
+      return;
+    }
+
+    const currentProfile = getStoredProfile();
+    const userProfile = {
+      ...currentProfile,
+      id: currentProfile.id || `usr_${Date.now()}`,
+      email: email.trim(),
+      full_name: currentProfile.full_name || email.trim().split('@')[0],
+      is_onboarded: true,
+      security_tier: 'enhanced' as const,
+      updated_at: new Date().toISOString(),
+    };
+
+    setStoredAuth(userProfile);
     setIsLoading(false);
     router.push('/dashboard');
   };
 
+  const handleDemoSignIn = () => {
+    const demoUser = {
+      id: 'usr_sandeep_01',
+      email: 'sandeep@example.com',
+      full_name: 'Sandeep',
+      avatar_url: null,
+      phone_number: '+1 (555) 234-5678',
+      is_onboarded: true,
+      security_tier: 'enhanced' as const,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    setStoredAuth(demoUser);
+    router.push('/dashboard');
+  };
+
   return (
-    <div className="min-h-screen bg-palette-canvas dark:bg-[#141313] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-starlight dark:bg-[#0D0E12] flex items-center justify-center p-4 transition-colors">
       <div className="w-full max-w-md space-y-6 animate-fadeIn">
         {/* Brand Header */}
         <div className="text-center">
-          <Link href="/" className="inline-flex items-center gap-2.5 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm flex items-center justify-center font-heading font-extrabold text-2xl">
+          <Link href="/" className="inline-flex items-center gap-2.5 mb-3 group">
+            <div className="w-12 h-12 rounded-2xl bg-primary text-white shadow-neu-button flex items-center justify-center font-heading font-extrabold text-2xl group-hover:scale-105 transition-transform">
               ⚡
             </div>
           </Link>
-          <h1 className="font-heading font-extrabold text-3xl text-palette-black dark:text-white tracking-wide">
-            SIGN IN TO LOCKPULSE
+          <h1 className="font-heading font-extrabold text-3xl text-on-surface dark:text-white tracking-tight">
+            Sign In to LockPulse
           </h1>
-          <p className="text-xs font-sans text-palette-ash mt-1">
+          <p className="text-xs sm:text-sm font-sans text-on-surface-variant dark:text-titanium-400 mt-1">
             Access your personal laptop security control plane
           </p>
         </div>
 
         {/* Login Form Card */}
         <NeoCard variant="raised" className="p-8 space-y-5">
+          {authError && (
+            <div className="p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl text-xs font-semibold text-error flex items-start gap-2 animate-scaleUp">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <span>{authError}</span>
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <NeoInput
               label="Email Address"
               type="email"
-              placeholder="name@example.com"
-              required
+              placeholder="name@domain.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              leftIcon={<Mail className="w-4 h-4 text-palette-ash" />}
+              error={emailError}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError('');
+              }}
+              leftIcon={<Mail className="w-4 h-4" />}
             />
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand">
+                <label className="font-heading font-bold text-xs uppercase tracking-wider text-on-surface dark:text-white">
                   Password
-                </span>
+                </label>
                 <Link
-                  href="/forgot-password"
-                  className="text-xs font-sans text-palette-ash hover:text-palette-black dark:hover:text-white font-semibold hover:underline"
+                  href="/login"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setEmail('sandeep@example.com');
+                    setPassword('LockPulse2026!');
+                  }}
+                  className="text-xs font-sans text-primary dark:text-primary-azure hover:underline font-semibold cursor-pointer"
                 >
-                  Forgot password?
+                  Fill Demo
                 </Link>
               </div>
               <NeoInput
                 type="password"
                 placeholder="••••••••••••"
-                required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                leftIcon={<Lock className="w-4 h-4 text-palette-ash" />}
+                error={passwordError}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (passwordError) setPasswordError('');
+                }}
+                leftIcon={<Lock className="w-4 h-4" />}
               />
             </div>
-
-            {errorMessage && (
-              <div className="p-3 bg-red-500/10 text-security-danger rounded-xl text-xs font-semibold">
-                {errorMessage}
-              </div>
-            )}
 
             <div className="pt-2">
               <NeoButton
@@ -98,48 +179,31 @@ export default function LoginPage() {
             </div>
           </form>
 
-          {/* Social Auth Divider */}
+          {/* Divider */}
           <div className="relative flex py-2 items-center">
-            <div className="flex-grow border-t border-palette-sand dark:border-[#3E3B3A]"></div>
-            <span className="flex-shrink mx-4 text-[10px] font-mono font-bold uppercase tracking-widest text-palette-ash">
-              Or continue with
+            <div className="flex-grow border-t border-outline-variant/60 dark:border-white/10"></div>
+            <span className="flex-shrink mx-4 text-[10px] font-mono font-bold uppercase tracking-widest text-on-surface-variant dark:text-titanium-400">
+              Quick Access
             </span>
-            <div className="flex-grow border-t border-palette-sand dark:border-[#3E3B3A]"></div>
+            <div className="flex-grow border-t border-outline-variant/60 dark:border-white/10"></div>
           </div>
 
           <NeoButton
             variant="secondary"
             size="md"
             className="w-full"
-            onClick={handleLogin}
+            onClick={handleDemoSignIn}
           >
-            <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
-              <path
-                fill="#4285F4"
-                d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-              />
-            </svg>
-            Google Single Sign-On
+            <ShieldCheck className="w-4 h-4 text-secondary mr-2" />
+            Continue with 1-Click Demo Profile
           </NeoButton>
         </NeoCard>
 
         {/* Footer Link */}
-        <p className="text-center text-xs font-sans text-palette-ash">
+        <p className="text-center text-xs font-sans text-on-surface-variant dark:text-titanium-400">
           Don't have an account?{' '}
-          <Link href="/signup" className="text-palette-black dark:text-white font-bold hover:underline">
-            Sign Up
+          <Link href="/signup" className="text-primary dark:text-primary-azure font-bold hover:underline">
+            Create Account & Enroll Laptop
           </Link>
         </p>
       </div>

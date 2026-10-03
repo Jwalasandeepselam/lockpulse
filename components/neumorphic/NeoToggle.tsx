@@ -38,7 +38,7 @@ export const NeoToggle: React.FC<NeoToggleProps> = ({
             </span>
           )}
           {description && (
-            <span className="font-sans text-xs text-on-surface-variant dark:text-[#c4c5d9] mt-0.5 leading-relaxed">
+            <span className="font-sans text-xs text-on-surface-variant dark:text-titanium-400 mt-0.5 leading-relaxed">
               {description}
             </span>
           )}
@@ -58,14 +58,14 @@ export const NeoToggle: React.FC<NeoToggleProps> = ({
         className={clsx(
           'relative w-14 h-8 rounded-full p-1 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-shrink-0 cursor-pointer',
           checked
-            ? 'bg-primary dark:bg-primary-container shadow-neu-button'
-            : 'bg-surface-container dark:bg-[#14151d] shadow-neu-recessed border border-outline-variant/30',
+            ? 'bg-secondary dark:bg-secondary-container shadow-neu-button'
+            : 'bg-surface-container dark:bg-[#1E212B] shadow-neu-recessed border border-outline-variant dark:border-[#282B38]',
           disabled && 'opacity-40 cursor-not-allowed'
         )}
       >
         <span
           className={clsx(
-            'block w-6 h-6 rounded-full bg-white dark:bg-white shadow-neu-raised-sm transition-transform duration-300',
+            'block w-6 h-6 rounded-full bg-white shadow-sm transition-transform duration-300',
             checked ? 'translate-x-6' : 'translate-x-0'
           )}
         />

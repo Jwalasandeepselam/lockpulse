@@ -45,6 +45,7 @@ export interface Device {
   os_version: string;
   agent_version: string;
   hardware_fingerprint?: string;
+  public_key?: string;
   status: DeviceStatus;
   presence_status: PresenceStatus;
   last_seen: string;

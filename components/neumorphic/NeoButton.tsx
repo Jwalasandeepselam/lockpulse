@@ -26,29 +26,29 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
   const sizeStyles = {
     sm: 'px-3.5 py-1.5 text-xs font-semibold rounded-xl gap-1.5',
     md: 'px-5 py-2.5 text-sm font-semibold rounded-xl gap-2',
-    lg: 'px-6 py-3.5 text-base font-bold rounded-xl gap-2.5',
-    xl: 'px-8 py-4 text-lg font-bold rounded-2xl gap-3',
+    lg: 'px-6 py-3 text-base font-bold rounded-xl gap-2.5',
+    xl: 'px-8 py-3.5 text-base sm:text-lg font-bold rounded-2xl gap-3',
   };
 
   const variantStyles = {
-    // Primary - Electric Cobalt Blue
+    // Primary - Apple Royal Blue
     primary:
-      'bg-primary hover:bg-[#0035be] dark:bg-primary-container text-white shadow-neu-button hover:opacity-95 active:scale-[0.98] transition-all font-heading tracking-tight',
-    // Secondary - Tactile Surface Neumorphic Raised
+      'bg-primary hover:bg-primary-hover text-white shadow-neu-button hover:opacity-95 active:scale-[0.98] transition-all font-heading tracking-tight',
+    // Secondary - Alpine Titanium Card Style (High Contrast)
     secondary:
-      'bg-surface dark:bg-[#232530] text-primary dark:text-primary-fixed shadow-neu-raised-sm hover:opacity-90 active:scale-[0.98] font-heading border border-outline-variant/30 dark:border-[#383a47]',
-    // Danger - Coral / Crimson Error
+      'bg-surface dark:bg-[#242735] text-on-surface dark:text-white shadow-neu-raised-sm hover:bg-surface-container dark:hover:bg-[#2C3042] active:scale-[0.98] font-heading font-bold border border-outline-variant dark:border-[#383A4A]',
+    // Danger - Apple Coral Red
     danger:
-      'bg-error hover:bg-[#93000a] text-white shadow-[4px_4px_10px_rgba(186,26,26,0.35),-4px_-4px_10px_rgba(255,255,255,0.7)] active:scale-[0.98] transition-all font-heading tracking-tight',
-    // Warning - Amber
+      'bg-error hover:bg-[#D70015] text-white shadow-sm hover:opacity-95 active:scale-[0.98] transition-all font-heading font-bold tracking-tight',
+    // Warning - Apple Amber
     warning:
-      'bg-tertiary-container hover:bg-tertiary text-on-tertiary-container font-heading shadow-neu-raised-sm active:scale-[0.98]',
-    // Ghost - Flat
+      'bg-tertiary hover:bg-tertiary-hover text-white font-heading font-bold shadow-sm active:scale-[0.98]',
+    // Ghost - Flat with crisp contrast
     ghost:
-      'bg-transparent text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container dark:hover:bg-[#232530] font-sans font-medium',
+      'bg-transparent text-on-surface-variant hover:text-on-surface dark:text-titanium-300 dark:hover:text-white hover:bg-surface-container dark:hover:bg-[#242735] font-sans font-semibold',
     // Inset - Sunken
     inset:
-      'bg-surface-container-low dark:bg-[#14151d] text-primary dark:text-white shadow-neu-recessed font-bold',
+      'bg-surface-container-low dark:bg-[#14151D] text-on-surface dark:text-white shadow-neu-recessed font-bold border border-outline-variant/50',
   };
 
   return (
@@ -56,7 +56,7 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
       disabled={disabled || isLoading}
       className={twMerge(
         clsx(
-          'inline-flex items-center justify-center transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          'inline-flex items-center justify-center transition-all duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer',
           sizeStyles[size],
           variantStyles[variant],
           (disabled || isLoading) && 'opacity-60 cursor-not-allowed pointer-events-none',

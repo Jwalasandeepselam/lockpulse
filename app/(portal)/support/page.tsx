@@ -13,7 +13,7 @@ import { NeoCard } from '@/components/neumorphic/NeoCard';
 import { NeoButton } from '@/components/neumorphic/NeoButton';
 import { NeoInput } from '@/components/neumorphic/NeoInput';
 import { NeoModal } from '@/components/neumorphic/NeoModal';
-import { initialAIMessages, initialDevices } from '@/lib/store';
+import { initialAIMessages, getStoredDevices } from '@/lib/store';
 import { AIConversationMessage } from '@/lib/types';
 
 export default function SupportAndAIPage() {
@@ -37,7 +37,7 @@ export default function SupportAndAIPage() {
 
     const newMsg: AIConversationMessage = {
       id: `msg_${Date.now()}`,
-      user_id: 'usr_sandeep_01',
+      user_id: 'usr_user',
       role: 'user',
       content: userText,
       created_at: new Date().toISOString(),
@@ -47,7 +47,10 @@ export default function SupportAndAIPage() {
     setIsThinking(true);
 
     setTimeout(() => {
-      let replyContent = `I can help explain your LockPulse security setup. Your registered devices (${initialDevices.map(d => d.device_name).join(', ')}) are currently protected via Ed25519 cryptographic channels.`;
+      const devices = getStoredDevices();
+      const deviceNames = devices.length > 0 ? devices.map(d => d.device_name).join(', ') : 'None yet';
+
+      let replyContent = `I can help explain your LockPulse security setup. Your registered devices (${deviceNames}) are protected via Ed25519 cryptographic channels.`;
 
       const lower = userText.toLowerCase();
       if (lower.includes('lock') || lower.includes('remote')) {
@@ -57,12 +60,14 @@ export default function SupportAndAIPage() {
       } else if (lower.includes('ticket') || lower.includes('support') || lower.includes('human')) {
         replyContent = `You can submit a diagnostic ticket using the "Open Support Ticket" button above. LockPulse will automatically attach sanitized device versions without exposing passwords or private keys.`;
       } else if (lower.includes('password') || lower.includes('key')) {
-        replyContent = `LockPulse follows zero-trust boundaries: raw OS passwords and private cryptographic keys never leave your laptop's secure storage (DPAPI/Keychain) and are never stored on Supabase servers.`;
+        replyContent = `LockPulse follows zero-trust boundaries: raw OS passwords and private cryptographic keys never leave your laptop's secure storage (DPAPI/Keychain) and are never stored on cloud servers.`;
+      } else if (lower.includes('pair') || lower.includes('enroll')) {
+        replyContent = `To pair a new device, click "Add Laptop" in the top bar or navigate to the Connect wizard. Scan the QR code or run the agent daemon to establish an encrypted handshake.`;
       }
 
       const assistantMsg: AIConversationMessage = {
         id: `msg_ai_${Date.now()}`,
-        user_id: 'usr_sandeep_01',
+        user_id: 'usr_assistant',
         role: 'assistant',
         content: replyContent,
         created_at: new Date().toISOString(),
@@ -70,7 +75,7 @@ export default function SupportAndAIPage() {
 
       setMessages((prev) => [...prev, assistantMsg]);
       setIsThinking(false);
-    }, 1000);
+    }, 900);
   };
 
   const handleCreateTicket = (e: React.FormEvent) => {
@@ -85,18 +90,18 @@ export default function SupportAndAIPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fadeIn">
+    <div className="max-w-4xl mx-auto space-y-6 animate-fadeIn pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-palette-sand-light dark:bg-[#222020] border border-palette-sand text-palette-charcoal dark:text-palette-sand font-mono text-xs font-bold mb-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary dark:text-primary-azure border border-primary/20 font-mono text-xs font-bold mb-1 shadow-sm">
             <Sparkles className="w-3.5 h-3.5" /> Sandboxed AI Security Companion
           </div>
-          <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-palette-black dark:text-white tracking-wide">
-            AI ASSISTANT & SUPPORT
+          <h1 className="font-heading font-extrabold text-2xl sm:text-4xl text-on-surface dark:text-white tracking-tight">
+            AI Assistant & Support
           </h1>
-          <p className="text-xs sm:text-sm font-sans text-palette-ash mt-0.5">
-            Ask security questions, troubleshoot laptop connection issues, or open a support ticket.
+          <p className="text-xs sm:text-sm font-sans text-on-surface-variant dark:text-titanium-400 mt-0.5">
+            Ask security questions, troubleshoot laptop connection issues, or open a diagnostic ticket.
           </p>
         </div>
 
@@ -104,7 +109,7 @@ export default function SupportAndAIPage() {
           variant="secondary"
           size="sm"
           onClick={() => setShowTicketModal(true)}
-          leftIcon={<LifeBuoy className="w-4 h-4 text-palette-black dark:text-white" />}
+          leftIcon={<LifeBuoy className="w-4 h-4 text-primary" />}
         >
           Open Support Ticket
         </NeoButton>
@@ -124,8 +129,8 @@ export default function SupportAndAIPage() {
                 <div
                   className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold ${
                     isUser
-                      ? 'bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm'
-                      : 'bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-charcoal dark:text-palette-sand border border-palette-sand'
+                      ? 'bg-primary text-white shadow-neu-button'
+                      : 'bg-surface-container dark:bg-[#242735] text-primary dark:text-primary-azure border border-outline-variant/60'
                   }`}
                 >
                   {isUser ? 'You' : <Bot className="w-4 h-4" />}
@@ -134,8 +139,8 @@ export default function SupportAndAIPage() {
                 <div
                   className={`p-4 rounded-2xl max-w-[80%] text-xs font-sans leading-relaxed ${
                     isUser
-                      ? 'bg-palette-black dark:bg-palette-white text-white dark:text-palette-black shadow-editorial-sm font-medium'
-                      : 'bg-palette-sand-light/60 dark:bg-[#1A1919] text-palette-charcoal dark:text-palette-sand border border-palette-sand dark:border-[#3E3B3A]'
+                      ? 'bg-primary text-white shadow-neu-button font-medium'
+                      : 'bg-surface-container-low dark:bg-[#12131A] text-on-surface dark:text-white border border-outline-variant/60 dark:border-[#282B38] shadow-neu-recessed'
                   }`}
                 >
                   {msg.content}
@@ -146,10 +151,10 @@ export default function SupportAndAIPage() {
 
           {isThinking && (
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-palette-sand-light dark:bg-[#1E1D1D] text-palette-ash border border-palette-sand flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-surface-container dark:bg-[#242735] text-primary border border-outline-variant flex items-center justify-center">
                 <Bot className="w-4 h-4 animate-spin" />
               </div>
-              <div className="p-3 bg-palette-sand-light/60 dark:bg-[#1A1919] rounded-2xl text-xs font-sans text-palette-ash">
+              <div className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-2xl text-xs font-sans text-on-surface-variant dark:text-titanium-400">
                 Analyzing security telemetry...
               </div>
             </div>
@@ -157,7 +162,7 @@ export default function SupportAndAIPage() {
         </div>
 
         {/* Chat Input Form */}
-        <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-3 border-t border-palette-sand/60 dark:border-[#3E3B3A]">
+        <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-3 border-t border-outline-variant/60 dark:border-[#282B38]">
           <div className="flex-1">
             <NeoInput
               placeholder="Ask about suspicious unlocks, remote lock, or pairing..."
@@ -187,14 +192,14 @@ export default function SupportAndAIPage() {
       >
         {ticketSubmitted ? (
           <div className="text-center py-6 space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-secondary/20 text-secondary mx-auto flex items-center justify-center border border-secondary/30">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h4 className="font-heading text-xl text-palette-black dark:text-white tracking-wide">
+            <h4 className="font-heading font-extrabold text-xl text-on-surface dark:text-white tracking-tight">
               TICKET SUBMITTED SUCCESSFULLY
             </h4>
-            <p className="text-xs font-sans text-palette-ash">
-              Reference #LP-TKT-8924. Our security support team will contact you via your registered email.
+            <p className="text-xs font-sans text-on-surface-variant dark:text-titanium-400">
+              Reference #LP-TKT-8924. Our security response team will contact you via your registered email.
             </p>
           </div>
         ) : (
@@ -210,13 +215,13 @@ export default function SupportAndAIPage() {
             </div>
 
             <div>
-              <label className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand block mb-1.5">
+              <label className="font-heading font-bold uppercase text-xs text-on-surface dark:text-white block mb-1.5">
                 Category
               </label>
               <select
                 value={ticketCategory}
                 onChange={(e: any) => setTicketCategory(e.target.value)}
-                className="w-full bg-palette-white dark:bg-[#1A1919] text-palette-black dark:text-palette-white rounded-xl px-4 py-3 text-sm border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-inset outline-none"
+                className="w-full bg-surface-container-lowest dark:bg-[#0D0E12] text-on-surface dark:text-white rounded-xl px-4 py-3 text-sm border border-outline-variant dark:border-[#282B38] shadow-neu-recessed outline-none focus:ring-2 focus:ring-primary/20"
               >
                 <option value="general">General Question</option>
                 <option value="pairing">Device Pairing & QR</option>
@@ -226,7 +231,7 @@ export default function SupportAndAIPage() {
             </div>
 
             <div>
-              <label className="font-heading tracking-wider uppercase text-xs text-palette-charcoal dark:text-palette-sand block mb-1.5">
+              <label className="font-heading font-bold uppercase text-xs text-on-surface dark:text-white block mb-1.5">
                 Problem Description
               </label>
               <textarea
@@ -235,12 +240,12 @@ export default function SupportAndAIPage() {
                 placeholder="Please describe what happened..."
                 value={ticketDescription}
                 onChange={(e) => setTicketDescription(e.target.value)}
-                className="w-full bg-palette-white dark:bg-[#1A1919] text-palette-black dark:text-palette-white rounded-xl p-3 text-xs font-sans border border-palette-sand dark:border-[#3E3B3A] shadow-editorial-inset outline-none resize-none"
+                className="w-full bg-surface-container-lowest dark:bg-[#0D0E12] text-on-surface dark:text-white rounded-xl p-3 text-xs font-sans border border-outline-variant dark:border-[#282B38] shadow-neu-recessed outline-none resize-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
-            <div className="p-3 bg-palette-sand-light/60 dark:bg-[#141313] rounded-xl text-[11px] font-sans text-palette-ash flex items-start gap-2 border border-palette-sand/60">
-              <FileText className="w-4 h-4 text-palette-black dark:text-white flex-shrink-0 mt-0.5" />
+            <div className="p-3 bg-surface-container-low dark:bg-[#12131A] rounded-xl text-[11px] font-sans text-on-surface-variant dark:text-titanium-400 flex items-start gap-2 border border-outline-variant/60">
+              <FileText className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
               <span>
                 <strong>Zero Privacy Leakage:</strong> No passwords, session tokens, or private keys are ever included in support tickets.
               </span>

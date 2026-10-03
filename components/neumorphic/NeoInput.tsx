@@ -24,14 +24,14 @@ export const NeoInput = forwardRef<HTMLInputElement, NeoInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="font-heading font-bold uppercase tracking-wider text-xs text-on-surface dark:text-white"
+            className="font-heading font-bold text-xs uppercase tracking-wider text-on-surface dark:text-white"
           >
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3.5 text-on-surface-variant pointer-events-none flex items-center justify-center">
+            <div className="absolute left-3.5 text-on-surface-variant dark:text-titanium-400 pointer-events-none flex items-center justify-center">
               {leftIcon}
             </div>
           )}
@@ -42,28 +42,28 @@ export const NeoInput = forwardRef<HTMLInputElement, NeoInputProps>(
             aria-describedby={error ? errorId : helperText ? helperId : undefined}
             className={twMerge(
               clsx(
-                'w-full bg-surface-container-lowest dark:bg-[#14151d] text-on-surface dark:text-white placeholder:text-on-surface-variant/60 rounded-xl px-4 py-3 text-sm font-sans transition-all duration-200 outline-none border border-outline-variant/40 dark:border-[#383a47] shadow-neu-recessed focus:border-primary focus:ring-1 focus:ring-primary',
+                'w-full bg-surface-container-lowest dark:bg-[#0D0E12] text-on-surface dark:text-white placeholder:text-on-surface-variant/50 dark:placeholder:text-titanium-500 rounded-xl px-4 py-2.5 sm:py-3 text-sm font-sans transition-all duration-200 outline-none border border-outline-variant dark:border-[#282B38] shadow-neu-recessed focus:border-primary focus:ring-2 focus:ring-primary/20',
                 leftIcon && 'pl-10',
                 rightIcon && 'pr-10',
-                error && 'border-error focus:ring-error',
+                error && 'border-error focus:border-error focus:ring-error/20',
                 className
               )
             )}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3.5 text-on-surface-variant flex items-center justify-center">
+            <div className="absolute right-3.5 text-on-surface-variant dark:text-titanium-400 flex items-center justify-center">
               {rightIcon}
             </div>
           )}
         </div>
         {error && (
-          <span id={errorId} className="text-xs font-semibold text-error font-sans">
+          <span id={errorId} className="text-xs font-semibold text-error font-sans flex items-center gap-1 mt-0.5">
             {error}
           </span>
         )}
         {!error && helperText && (
-          <span id={helperId} className="text-xs text-on-surface-variant font-sans">
+          <span id={helperId} className="text-xs text-on-surface-variant dark:text-titanium-400 font-sans mt-0.5">
             {helperText}
           </span>
         )}

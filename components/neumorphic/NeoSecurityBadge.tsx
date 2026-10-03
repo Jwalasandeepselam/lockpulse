@@ -21,10 +21,10 @@ export const NeoSecurityBadge: React.FC<NeoSecurityBadgeProps> = ({
   showIcon = true,
   className,
 }) => {
-  const normalized = status.toLowerCase();
+  const normalized = (status || 'secure').toLowerCase();
 
   let config = {
-    colorClass: 'bg-secondary-container/20 text-secondary dark:text-secondary-fixed border-secondary-container/40',
+    colorClass: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800/60',
     dotClass: 'bg-secondary glow-emerald',
     icon: ShieldCheck,
     defaultLabel: 'ALL SECURE',
@@ -32,29 +32,29 @@ export const NeoSecurityBadge: React.FC<NeoSecurityBadgeProps> = ({
 
   if (normalized === 'warning' || normalized === 'medium') {
     config = {
-      colorClass: 'bg-tertiary-container/20 text-tertiary dark:text-tertiary-fixed border-tertiary-container/40',
-      dotClass: 'bg-tertiary-container glow-amber',
+      colorClass: 'bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-300 border-amber-300 dark:border-amber-800/60',
+      dotClass: 'bg-tertiary glow-amber',
       icon: AlertTriangle,
       defaultLabel: 'WARNING',
     };
   } else if (normalized === 'danger' || normalized === 'high' || normalized === 'critical') {
     config = {
-      colorClass: 'bg-error-container/40 text-error dark:text-error-container border-error/30',
+      colorClass: 'bg-red-50 text-red-900 dark:bg-red-950/40 dark:text-red-300 border-red-300 dark:border-red-800/60',
       dotClass: 'bg-error glow-coral animate-ping',
       icon: ShieldAlert,
       defaultLabel: 'CRITICAL RISK',
     };
   } else if (normalized === 'locked') {
     config = {
-      colorClass: 'bg-surface-container text-on-surface-variant border-outline-variant/50',
-      dotClass: 'bg-outline',
+      colorClass: 'bg-slate-100 text-slate-800 dark:bg-slate-800/60 dark:text-slate-200 border-slate-300 dark:border-slate-700',
+      dotClass: 'bg-slate-500',
       icon: Lock,
       defaultLabel: 'OS LOCKED',
     };
   } else if (normalized === 'info' || normalized === 'unknown') {
     config = {
-      colorClass: 'bg-primary-fixed/30 text-primary dark:text-primary-fixed border-primary-fixed/50',
-      dotClass: 'bg-primary glow-cobalt',
+      colorClass: 'bg-blue-50 text-blue-900 dark:bg-blue-950/40 dark:text-blue-300 border-blue-300 dark:border-blue-800/60',
+      dotClass: 'bg-primary glow-azure',
       icon: Info,
       defaultLabel: 'INFO',
     };
@@ -72,7 +72,7 @@ export const NeoSecurityBadge: React.FC<NeoSecurityBadgeProps> = ({
     <div
       className={twMerge(
         clsx(
-          'inline-flex items-center font-heading font-bold tracking-wider uppercase rounded-full border shadow-neu-raised-sm select-none',
+          'inline-flex items-center font-heading font-bold tracking-wider uppercase rounded-full border shadow-sm select-none',
           config.colorClass,
           sizeStyles[size],
           className
